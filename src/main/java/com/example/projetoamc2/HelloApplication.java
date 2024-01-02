@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+// This is the file we run
 
 public class HelloApplication extends Application {
     @Override

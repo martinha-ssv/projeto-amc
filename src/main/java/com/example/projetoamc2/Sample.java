@@ -6,17 +6,16 @@ de AMC de 2023. Neste exemplo, o ficheiro bcancer.csv deve estar na pasta do pro
 Não é na pasta src, é na pasta acima.
 fmd
 */
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class Sample {
+public class Sample implements Serializable {
 
     private ArrayList<int []> lista; // Lista de Samples
     private int [] domain = null;    // Array de domínios, deve ser actualizado no método add.
+
 
     public Sample() {
         this.lista = new ArrayList<int []>();
@@ -72,6 +71,10 @@ public class Sample {
         lista.add(v);
     }
 
+    public int no_features() {
+        return lista.getFirst().length;
+    }
+
     public int length (){
         return lista.size();
     }
@@ -80,20 +83,19 @@ public class Sample {
         return lista.get(i);
     }
 
-    // Vamos ter de dar override a isto por completo pq isto não vai ser muito sloooooowwwww -> estava a pensar em usar nested hashmaps
-    public int count(int[] var, int[] val) { //Falta testar
+    public int count(List<Integer> var, List<Integer> val) { //Falta testar
         int r = 0;
-        if (var.length != val.length) {
+        if (var.size() != val.size()) {
             return r; // Retorna 0 se os comprimentos são diferentes
         }
         // Iterar sobre cada vetor dentro da lista de Samples
-        for (int i = 0; i < lista.size(); i++) {
-            int[] sample = lista.get(i); // Obter o vetor de Sample atual
+        // Obter o vetor de Sample atual
+        for (int[] sample : lista) {
             boolean match = true;
             // Verificar se os valores em 'sample' correspondem aos valores em 'val' nas posições 'var'
-            for (int j = 0; j < var.length; j++) {
+            for (int j = 0; j < var.size(); j++) {
                 // Verifica se a posição dada por var[j] é válida
-                if (var[j] >= sample.length || sample[var[j]] != val[j]) {
+                if (var.get(j) >= sample.length || sample[var.get(j)] != val.get(j)) {
                     match = false;
                     break; // Não é uma correspondência, não precisa verificar mais
                 }
@@ -118,6 +120,10 @@ public class Sample {
             r *= domain[pos];
         }
         return r;
+    }
+
+    public int getDomain(int i) {
+        return this.domain[i];
     }
 
 
