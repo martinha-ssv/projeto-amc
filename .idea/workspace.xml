@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="434d6097-7d48-4ff8-acca-b864660fc943" name="Changes" comment="Fiz um bocado das minhas funções">
+    <list default="true" id="434d6097-7d48-4ff8-acca-b864660fc943" name="Changes" comment="Fiz um bocado das minhas funções, take 2">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/projetoamc2/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/projetoamc2/Graph.java" afterDir="false" />
     </list>
@@ -44,25 +44,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Application.BayesianNetwork.executor&quot;: &quot;Debug&quot;,
-    &quot;Application.Graph.executor&quot;: &quot;Debug&quot;,
-    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Application.BayesianNetwork.executor": "Debug",
+    "Application.Graph.executor": "Debug",
+    "Application.HelloApplication.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Application.Graph">
     <configuration name="BayesianNetwork" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.projetoamc2.BayesianNetwork" />
@@ -92,8 +92,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.BayesianNetwork" />
         <item itemvalue="Application.Graph" />
+        <item itemvalue="Application.BayesianNetwork" />
       </list>
     </recent_temporary>
   </component>
@@ -202,6 +202,17 @@
     <MESSAGE value="Refactoring - implementei a classe BayesNetwork para herdar de grafo, e estou a implementar o MDL nessa classe em vez de na classe grafo." />
     <MESSAGE value="Acabei MDL e escrevi os headings das funções que têm de fazer :D" />
     <MESSAGE value="Fiz um bocado das minhas funções" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fiz um bocado das minhas funções" />
+    <MESSAGE value="Fiz um bocado das minhas funções, take 2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fiz um bocado das minhas funções, take 2" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.io.FileNotFoundException" package="java.io" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
