@@ -8,8 +8,11 @@ public class BayesianNetwork implements Serializable {
 
     public Graph DAG;
     public DFONode[] dfos;
-    public BayesianNetwork(Graph g, Sample s, double S) {
+    public BayesianNetwork(Graph g, Sample sample, double S) {
         this.DAG = g;
+        for (int i = 0; i < this.DAG.getDim(); i++) {
+            dfos[i] = new DFONode(g, sample, S, i);
+        }
     }
 
     public void export_network(String path) {
