@@ -11,6 +11,8 @@ target/
 *.iws
 *.iml
 *.ipr
+.idea/workspace.xml
+.idea/shelfs/
 
 ### Eclipse ###
 .apt_generated
@@ -35,4 +37,4 @@ build/
 .vscode/
 
 ### Mac OS ###
-.DS_Store.idea/workspace.xml
+.DS_Store

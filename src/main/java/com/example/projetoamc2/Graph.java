@@ -235,7 +235,7 @@ public class Graph implements Serializable {
      */
     private boolean createsCycle(int o, int d, int operation) {
         if (operation == 2) {
-            return addcreatesCycle(int o, int d);
+            return addcreatesCycle(o,d);
         }
         return false; //escrevi isto só para não dar erro, depois muda :D
     }
@@ -445,23 +445,5 @@ public class Graph implements Serializable {
         System.out.println(posspars);
     }
 
-
-
-    // alternativa para ver todos os neighbors: ter um tuplo externo tipo counter. a cada incremento do tuplo, testar
-    // logo o add-neighbor, o del-neighbor e o rev-neighbor. o tuplo teria de ser incrementado tal que ambos os índices
-    // percorressem todos os vértices, para vermos todas as arestas possíveis.
-    private ArrayList<Graph> additionNeighbors() {
-        ArrayList<Graph> neighbors = new ArrayList<>();
-        for (int i = 0; i < this.dim; i++) {
-            for (int j = 0; j < this.dim; j++) {
-                if (!this.edgeQ(i,j)) {
-                    Graph g = this.copy();
-                    g.addEdge(i,j);
-                    neighbors.add(g);
-                }
-            }
-        }
-        return neighbors;
-    }
 }
 
