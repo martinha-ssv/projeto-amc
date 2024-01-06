@@ -184,6 +184,18 @@ public class Graph implements Serializable {
         // partir do start node.
     }
 
+
+    public boolean operationAllowed(int o, int d, int operation) {
+        return !((this.createsCycle(o,d,operation)) || this.exceedsK(o,d,operation));
+    }
+    
+
+    /**
+     *
+     * @param o
+     * @param d
+     */
+
     private boolean haspathDFS(int o, int d, Set<Integer> visited) {
         if (o == d) {
             return true;
@@ -203,16 +215,6 @@ public class Graph implements Serializable {
         return false;
     }
 
-    public boolean operationAllowed(int o, int d, int operation) {
-        return !((this.createsCycle(o,d,operation)) || this.exceedsK(o,d,operation));
-    }
-
-    /**
-     *
-     * @param o
-     * @param d
-     */
-
     private boolean addcreatesCycle(int o, int d) {
         Set<Integer> visited = new HashSet<>();
         return haspathDFS(o, d, visited);
@@ -224,8 +226,21 @@ public class Graph implements Serializable {
      * @param d
      */
     private boolean invertcreatesCycle(int o, int d) {
-        return false;
+        if (!adj_lists.containsKey(o)) {
+            System.out.println("Erro: o nó não tem vizinhos, não há arestas");
+        }
+        // Remove o nó de o para d
+        if (adj_lists.containsKey(o)) {
+            adj_lists.get(o).remove((Integer) d);
+        }
+        // Check if adding the edge in the reverse direction creates a cycle
+        boolean createsCycle = addcreatesCycle(d, o);
+        // Add the edge back to its original direction
+        adj_lists.get(o).add(d);
+
+        return createsCycle;
     }
+
     /**
      *
      * @param o
@@ -235,15 +250,26 @@ public class Graph implements Serializable {
      */
     private boolean createsCycle(int o, int d, int operation) {
         if (operation == 2) {
-            return addcreatesCycle(int o, int d);
+            return addcreatesCycle(o,d);
         }
-        return false; //escrevi isto só para não dar erro, depois muda :D
+        else if (operation==1) {
+            return invertcreatesCycle(o,d);
+        }
+        System.out.println("Operation not allowed");
+        return false;
     }
 
     private boolean exceedsK(int o, int d, int operation) {
-        int k = 2;
-        // Gabi :D
-        return false;
+        if (operation==2) {
+            return (parents(d).size()>1);
+        }
+        else if (operation==1 || operation==0) {
+            return (parents(d).size()-1>2);
+        }
+        else {
+            System.out.println("Operation not allowed");
+            return false;
+        }
     }
 
     public LinkedList<Integer> DFS(int o) {

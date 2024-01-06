@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="434d6097-7d48-4ff8-acca-b864660fc943" name="Changes" comment="Acabei MDL e escrevi os headings das funções que têm de fazer :D">
+    <list default="true" id="434d6097-7d48-4ff8-acca-b864660fc943" name="Changes" comment="Fiz um bocado das minhas funções">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/projetoamc2/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/projetoamc2/Graph.java" afterDir="false" />
     </list>
@@ -44,25 +44,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Application.BayesianNetwork.executor": "Debug",
-    "Application.Graph.executor": "Debug",
-    "Application.HelloApplication.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Application.BayesianNetwork.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.Graph.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.Graph">
     <configuration name="BayesianNetwork" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.projetoamc2.BayesianNetwork" />
@@ -113,7 +113,8 @@
       <option name="presentableId" value="Default" />
       <updated>1703761602637</updated>
       <workItem from="1703761603800" duration="52883000" />
-      <workItem from="1704476848466" duration="7170000" />
+      <workItem from="1704476848466" duration="8606000" />
+      <workItem from="1704553067621" duration="3178000" />
     </task>
     <task id="LOCAL-00001" summary="Implementei Graph como HashMap e estive a rever umas coisas. Also comecei o MDL mas precisamos de ver o count primeiro :S">
       <option name="closed" value="true" />
@@ -131,7 +132,15 @@
       <option name="project" value="LOCAL" />
       <updated>1704218512381</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Fiz um bocado das minhas funções">
+      <option name="closed" value="true" />
+      <created>1704551653445</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1704551653445</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -192,6 +201,7 @@
     <MESSAGE value="Implementei Graph como HashMap e estive a rever umas coisas. Also comecei o MDL mas precisamos de ver o count primeiro :S" />
     <MESSAGE value="Refactoring - implementei a classe BayesNetwork para herdar de grafo, e estou a implementar o MDL nessa classe em vez de na classe grafo." />
     <MESSAGE value="Acabei MDL e escrevi os headings das funções que têm de fazer :D" />
-    <option name="LAST_COMMIT_MESSAGE" value="Acabei MDL e escrevi os headings das funções que têm de fazer :D" />
+    <MESSAGE value="Fiz um bocado das minhas funções" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fiz um bocado das minhas funções" />
   </component>
 </project>
