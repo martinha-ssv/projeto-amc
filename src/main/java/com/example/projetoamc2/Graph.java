@@ -26,8 +26,6 @@ public class Graph implements Serializable {
         return dim;
     }
 
-
-
     /**
      * Adiciona uma aresta de <i>o</i> para <i>d</i>.
      * @param o origem
@@ -53,7 +51,7 @@ public class Graph implements Serializable {
             // objeto que queremos que seja removido.
             adj_lists.get(o).remove((Integer) d);
         } else {
-            System.out.println("Edge ("+o+","+d+") can't be inverted because it doesn't exist.");
+            System.out.println("Edge ("+o+","+d+") can't be removed because it doesn't exist.");
         }
     }
 
@@ -92,7 +90,8 @@ public class Graph implements Serializable {
      * @param d destino
      * @return <i>true</i> se existir um caminho de <i>o</i> para <i>d</i>, <i>false</i> caso contrário.
      */
-    public boolean connected (int o, int d) {
+
+    public boolean connected(int o, int d) {
         return !(BFStraversal(o, d) == null);
     } //não sei se é melhor usar o BFS ou o DFS, mas acho que é indiferente maybe
 
@@ -185,6 +184,25 @@ public class Graph implements Serializable {
         // partir do start node.
     }
 
+    private boolean haspathDFS(int o, int d, Set<Integer> visited) {
+        if (o == d) {
+            return true;
+        }
+
+        visited.add(o);
+        if (adj_lists.containsKey(o)) {
+            for (int neighbor : adj_lists.get(o)) {
+                if (!visited.contains(neighbor)) {
+                    if (haspathDFS(neighbor, o, visited)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     public boolean operationAllowed(int o, int d, int operation) {
         return !((this.createsCycle(o,d,operation)) || this.exceedsK(o,d,operation));
     }
@@ -193,11 +211,32 @@ public class Graph implements Serializable {
      *
      * @param o
      * @param d
+     */
+
+    private boolean addcreatesCycle(int o, int d) {
+        Set<Integer> visited = new HashSet<>();
+        return haspathDFS(o, d, visited);
+    }
+
+    /**
+     *
+     * @param o
+     * @param d
+     */
+    private boolean invertcreatesCycle(int o, int d) {
+        return false;
+    }
+    /**
+     *
+     * @param o
+     * @param d
      * @param operation Can take the value 1 - Edge inversion - and 2 - Edge addition.
      * @return Whether the (2) addition of edge o->d or (1) inversion of edge o->d (obtaining edge d->o) creates a cycle in the graph or not.
      */
     private boolean createsCycle(int o, int d, int operation) {
-        // Gabi :D
+        if (operation == 2) {
+            return addcreatesCycle(int o, int d);
+        }
         return false; //escrevi isto só para não dar erro, depois muda :D
     }
 
