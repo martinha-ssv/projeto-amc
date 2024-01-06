@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="434d6097-7d48-4ff8-acca-b864660fc943" name="Changes" comment="Acabei MDL e escrevi os headings das funções que têm de fazer :D">
+    <list default="true" id="434d6097-7d48-4ff8-acca-b864660fc943" name="Changes" comment="Interface 1 done (I think :D)&#10;Also há uma classe nova q sou eu a procrastinar, recomendo ignorar">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/projetoamc2/Graph_Experiment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/projetoamc2/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/projetoamc2/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/projetoamc2/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/projetoamc2/hello-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/projetoamc2/App1_GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/projetoamc2/App1_GUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +22,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="app2" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MavenImportPreferences">
@@ -34,9 +39,9 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="ProjectErrors" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2aAVvBBtJnc9brUIASNx96bWcRj" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -48,12 +53,13 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Application.App1_GUI.executor": "Debug",
     "Application.BayesianNetwork.executor": "Debug",
     "Application.Graph.executor": "Debug",
     "Application.HelloApplication.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "rerun",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -64,7 +70,20 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Application.Graph">
+  <component name="RunManager" selected="Application.App1_GUI">
+    <configuration name="App1_GUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.projetoamc2.App1_GUI" />
+      <module name="projeto-amc2" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.projetoamc2.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="BayesianNetwork" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.projetoamc2.BayesianNetwork" />
       <module name="projeto-amc2" />
@@ -93,8 +112,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.App1_GUI" />
+        <item itemvalue="Application.Graph" />
         <item itemvalue="Application.BayesianNetwork" />
         <item itemvalue="Application.Graph" />
+        <item itemvalue="Application.BayesianNetwork" />
       </list>
     </recent_temporary>
   </component>
@@ -114,6 +136,7 @@
       <option name="presentableId" value="Default" />
       <updated>1703761602637</updated>
       <workItem from="1703761603800" duration="52883000" />
+      <workItem from="1704413900593" duration="22272000" />
     </task>
     <task id="LOCAL-00001" summary="Implementei Graph como HashMap e estive a rever umas coisas. Also comecei o MDL mas precisamos de ver o count primeiro :S">
       <option name="closed" value="true" />
@@ -131,7 +154,23 @@
       <option name="project" value="LOCAL" />
       <updated>1704218512381</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Funções de in/out de serialização + Nova classe DFONode para a Inês armazenar as DFOs :D">
+      <option name="closed" value="true" />
+      <created>1704496840514</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1704496840514</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Comecei a interface, está fixe :P">
+      <option name="closed" value="true" />
+      <created>1704538511451</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1704538511451</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -163,7 +202,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="rerun" />
+                        <option value="main" />
                       </list>
                     </value>
                   </entry>
@@ -182,6 +221,9 @@
     <MESSAGE value="Implementei Graph como HashMap e estive a rever umas coisas. Also comecei o MDL mas precisamos de ver o count primeiro :S" />
     <MESSAGE value="Refactoring - implementei a classe BayesNetwork para herdar de grafo, e estou a implementar o MDL nessa classe em vez de na classe grafo." />
     <MESSAGE value="Acabei MDL e escrevi os headings das funções que têm de fazer :D" />
-    <option name="LAST_COMMIT_MESSAGE" value="Acabei MDL e escrevi os headings das funções que têm de fazer :D" />
+    <MESSAGE value="Funções de in/out de serialização + Nova classe DFONode para a Inês armazenar as DFOs :D" />
+    <MESSAGE value="Comecei a interface, está fixe :P" />
+    <MESSAGE value="Interface 1 done (I think :D)&#10;Also há uma classe nova q sou eu a procrastinar, recomendo ignorar" />
+    <option name="LAST_COMMIT_MESSAGE" value="Interface 1 done (I think :D)&#10;Also há uma classe nova q sou eu a procrastinar, recomendo ignorar" />
   </component>
 </project>
