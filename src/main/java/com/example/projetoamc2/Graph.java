@@ -17,11 +17,13 @@ public class Graph implements Serializable {
 
         }
     }
-
+/*
     public Graph(String random) {
         //gera um grafo random
 
     }
+    */
+
 
     /**
      *
@@ -448,9 +450,9 @@ public class Graph implements Serializable {
             int first_parent = parents.removeFirst(); // Tiramos a 1ª variável do vetor de pais
             LinkedList<LinkedList<Integer>> combs = this.possibleParentValues(s, parents); // Chamamos a função para os pais restantes
             for (int i = 0; i<s.getDomain(first_parent);i++) {
-                for (int j = 0; j<combs.size(); j++) {
+                for (LinkedList<Integer> comb : combs) {
                     LinkedList<Integer> temp = new LinkedList<>(List.of(i));
-                    temp.addAll(combs.get(j));
+                    temp.addAll(comb);
                     options.add(temp);
                 }
             }

@@ -7,6 +7,7 @@ import java.util.List;
 public class BayesianNetwork implements Serializable {
 
     public Graph DAG;
+    private int numNodes;
     public DFONode[] dfos;
     public BayesianNetwork(Graph g, Sample sample, double S) {
         this.DAG = g;
@@ -30,5 +31,7 @@ public class BayesianNetwork implements Serializable {
         }
     }
 
-
+    public int getNumNodes() {
+        return numNodes;
+    }
 }
