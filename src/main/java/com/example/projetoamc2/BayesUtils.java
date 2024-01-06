@@ -35,4 +35,11 @@ public class BayesUtils {
             e.printStackTrace();
         }
     }
+
+    public static <T> T deserialize(String filename, Class<T> clazz) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
+            Object obj = ois.readObject();
+            return clazz.cast(obj);
+        }
+    }
 }

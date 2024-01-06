@@ -135,17 +135,21 @@ public class App1_GUI {
         // Learn Sample Button
         learn_sample.addActionListener(actionEvent -> {
             boolean isInt = false;
-            int n0graphs = 0;
+            int n0graphs = 1;
+
             while (!isInt) {
                 String input = JOptionPane.showInputDialog(learn_sample, "Please input the number of starting graphs for the learning algorithm.");
                 try {
                     n0graphs = Integer.parseInt(input);
-                    isInt = true;
+                    isInt = n0graphs > 0;
                 } catch (NumberFormatException e) {
-                    System.out.println("Error: The input provided does not contain a valid integer.");
+                    System.out.println("Error: The input provided is not valid.");
                 }
             }
-            bn = Controller.Learn(s, n0graphs);
+
+            Graph bestgraph = Controller.greedy(s, n0graphs);
+
+
             save_bayes.setEnabled(true);
 
             // Experiment: GraphPanel - maybe remove?
