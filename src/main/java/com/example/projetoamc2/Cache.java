@@ -1,3 +1,4 @@
+// Acho que esta classe pode ser apagada para o jar da app2
 package com.example.projetoamc2;
 
 import java.io.Serializable;

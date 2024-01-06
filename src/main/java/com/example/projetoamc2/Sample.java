@@ -1,3 +1,4 @@
+// Acho que esta classe pode ser apagada para o jar da app2
 package com.example.projetoamc2;
 
 /*Esta classe Sample tem um construtor que lê um ficheiro csv e constrói uma lista de arrays
@@ -125,9 +126,7 @@ public class Sample implements Serializable {
         return r;
     }
 
-    public int getDomain(int i) {
-        return this.domain[i];
-    }
+    public int getDomain(int i) {  return this.domain[i];  }
 
 
     @Override
