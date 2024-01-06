@@ -18,6 +18,11 @@ public class Graph implements Serializable {
         }
     }
 
+    public Graph(String random) {
+        //gera um grafo random
+
+    }
+
     /**
      *
      * @return o nº de nós do gráfico.
