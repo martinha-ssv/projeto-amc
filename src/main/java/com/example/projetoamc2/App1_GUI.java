@@ -18,14 +18,12 @@ public class App1_GUI {
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    App1_GUI window = new App1_GUI();
-                    window.frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                App1_GUI window = new App1_GUI();
+                window.frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -91,46 +89,89 @@ public class App1_GUI {
         // Dataset label
         JLabel dataset_lbl = new JLabel("Dataset: Not Loaded");
 
+        c.gridx = 1;
+        c.gridy = 0;
+        c.gridwidth = 4;
+        c.gridheight = 1;
+        c.weightx = 4;
+        c.weighty = 0;
+
+        frame.getContentPane().add(dataset_lbl, c);
+
+        // Dataset text area (acho que depois vou mudar para uma JTable mas MVP meninas MVP)
+        JTextArea dataset_disp = new JTextArea();
+        JScrollPane scroll = new JScrollPane(dataset_disp);
+        dataset_disp.setEditable(false);
+        frame.getContentPane().add(scroll);
+
+        c.gridx = 1;
+        c.gridy = 1;
+        c.gridwidth = 4;
+        c.gridheight = 4;
+        c.weightx = 4;
+        c.weighty = 4;
+
+        frame.getContentPane().add(dataset_disp, c);
+
+
+
+
 
         // Action Listeners -------------------------------------------------------------
 
         // Load CSV Button
-        load_csv.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                JFileChooser fc = new JFileChooser();
-                fc.showOpenDialog(load_csv);
-                File f = fc.getSelectedFile();
-                String path = f.getAbsolutePath();
-                s = new Sample(path);
-                dataset_lbl.setText("Dataset: Loaded");
-                learn_sample.setEnabled(true);
+        load_csv.addActionListener(actionEvent -> {
+            JFileChooser fc = new JFileChooser();
+            fc.showOpenDialog(load_csv);
+            File f = fc.getSelectedFile();
+            String path = f.getAbsolutePath();
+            s = new Sample(path);
+            dataset_lbl.setText("Dataset: Loaded");
+            dataset_disp.setText(s.toString());
+            learn_sample.setEnabled(true);
 
-                System.out.println(s);
-            }
         });
 
-        learn_sample.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                boolean isInt = false;
-                int n0graphs = 0;
-                while (!isInt) {
-                    String input = JOptionPane.showInputDialog(learn_sample, "Please input the number of starting graphs for the learning algorithm.");
-                    try {
-                        n0graphs = Integer.parseInt(input);
-                        isInt = true;
-                    } catch (NumberFormatException e) {
-                        System.out.println("Error: The input provided does not contain a valid integer.");
-                    }
+        // Learn Sample Button
+        learn_sample.addActionListener(actionEvent -> {
+            boolean isInt = false;
+            int n0graphs = 0;
+            while (!isInt) {
+                String input = JOptionPane.showInputDialog(learn_sample, "Please input the number of starting graphs for the learning algorithm.");
+                try {
+                    n0graphs = Integer.parseInt(input);
+                    isInt = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: The input provided does not contain a valid integer.");
                 }
-
-                bn = Controller.Learn(s, n0graphs);
             }
+            bn = Controller.Learn(s, n0graphs);
+            save_bayes.setEnabled(true);
+
+            // Experiment: GraphPanel - maybe remove?
+            Graph_Experiment graphpanel = new Graph_Experiment(bn.DAG);
+            c.gridx = 1;
+            c.gridy = 5;
+            c.gridwidth = 4;
+            c.gridheight = 3;
+            c.weightx = 4;
+            c.weighty = 3;
+
+            frame.getContentPane().add(graphpanel, c);
+
         });
 
+        // Save Bayesian Network Button
+        save_bayes.addActionListener(actionEvent -> {
+            JFileChooser fc = new JFileChooser();
+            fc.setDialogTitle("Select Directory");
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fc.showSaveDialog(save_bayes);
+            File f = fc.getSelectedFile();
+            String path = f.getAbsolutePath();
+            bn.export_network(path);
 
-
+        });
 
         /*
         c.gridx = 0;
