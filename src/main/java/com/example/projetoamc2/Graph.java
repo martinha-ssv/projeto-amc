@@ -184,18 +184,6 @@ public class Graph implements Serializable {
         // partir do start node.
     }
 
-
-    public boolean operationAllowed(int o, int d, int operation) {
-        return !((this.createsCycle(o,d,operation)) || this.exceedsK(o,d,operation));
-    }
-    
-
-    /**
-     *
-     * @param o
-     * @param d
-     */
-
     private boolean haspathDFS(int o, int d, Set<Integer> visited) {
         if (o == d) {
             return true;
@@ -214,6 +202,16 @@ public class Graph implements Serializable {
 
         return false;
     }
+
+    public boolean operationAllowed(int o, int d, int operation) {
+        return !((this.createsCycle(o,d,operation)) || this.exceedsK(o,d,operation));
+    }
+
+    /**
+     *
+     * @param o
+     * @param d
+     */
 
     private boolean addcreatesCycle(int o, int d) {
         Set<Integer> visited = new HashSet<>();
@@ -240,7 +238,6 @@ public class Graph implements Serializable {
 
         return createsCycle;
     }
-
     /**
      *
      * @param o
@@ -471,23 +468,5 @@ public class Graph implements Serializable {
         System.out.println(posspars);
     }
 
-
-
-    // alternativa para ver todos os neighbors: ter um tuplo externo tipo counter. a cada incremento do tuplo, testar
-    // logo o add-neighbor, o del-neighbor e o rev-neighbor. o tuplo teria de ser incrementado tal que ambos os índices
-    // percorressem todos os vértices, para vermos todas as arestas possíveis.
-    private ArrayList<Graph> additionNeighbors() {
-        ArrayList<Graph> neighbors = new ArrayList<>();
-        for (int i = 0; i < this.dim; i++) {
-            for (int j = 0; j < this.dim; j++) {
-                if (!this.edgeQ(i,j)) {
-                    Graph g = this.copy();
-                    g.addEdge(i,j);
-                    neighbors.add(g);
-                }
-            }
-        }
-        return neighbors;
-    }
 }
 
