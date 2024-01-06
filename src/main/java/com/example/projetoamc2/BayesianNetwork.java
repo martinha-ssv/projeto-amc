@@ -20,7 +20,7 @@ public class BayesianNetwork implements Serializable {
             objectOut.writeObject(this);
             objectOut.close();
             fileOut.close();
-            System.out.println("A Rede Bayesiana foi exportada com sucesso.");
+            System.out.println("The Bayesian Network was exported successfully.");
             System.out.print("To find it, check the "); System.out.print(path); System.out.print(" directory.");
         } catch (IOException e) {
             e.printStackTrace();
