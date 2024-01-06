@@ -430,7 +430,7 @@ public class Graph implements Serializable {
      * @param parents Os pais (quando se chama a função em recursão, são os que ainda não foram processados) do nó
      * @return LinkedList de LinkedLists de
      */
-    private LinkedList<LinkedList<Integer>> possibleParentValues(Sample s, LinkedList<Integer> parents) {
+    public LinkedList<LinkedList<Integer>> possibleParentValues(Sample s, LinkedList<Integer> parents) {
         LinkedList<LinkedList<Integer>> options = new LinkedList<>();
         // Caso de terminação: se só sobrar uma variável para combinar, devolvemos lista com os valores possíveis da variável.
         if (parents.size() == 1) {
