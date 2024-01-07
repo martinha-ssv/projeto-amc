@@ -10,6 +10,7 @@ public class Graph implements Serializable {
     private final HashMap<Integer, LinkedList<Integer>> adj_lists = new HashMap<>();
     private final HashMap<Integer, Double> partial_MDLs = new HashMap<>();
 
+
     Graph(int d) {
         this.dim = d; // nota: dim deve ser igual ao número de variáveis menos a classe.
         for (int i = 0; i<this.dim; i++) {
@@ -30,6 +31,8 @@ public class Graph implements Serializable {
     public int getDim() {
         return dim;
     }
+    public boolean edgeQ(int o, int d) {
+        return adj_lists[o].contains(d);
 
     /**
      * Adiciona uma aresta de <i>o</i> para <i>d</i>.

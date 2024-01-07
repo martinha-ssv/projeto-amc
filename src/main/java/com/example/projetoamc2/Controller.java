@@ -3,6 +3,10 @@ package com.example.projetoamc2;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+
 public class Controller {
     public static Graph greedy(Sample s, int n0graphs) {
         //passo 0: criar lista de grafos random (chamando o construtor random)
@@ -32,6 +36,37 @@ public class Controller {
         // descobres o melhor (ainda tens guardado o o, d e operação (2 é add, 1 é inv, 0 é remove))
         // transformas o grafo no grafo vizinho melhor (não esquecer de atualizar os mdls (parciais e talvez o total)) (se inv chamar graph.node_mdl(o, ...) e graph.node_mdl(d, ...) se add ou rem chamar graph.node_mdl(d))
         // devolves o mdldelta deste grafo
-        return 0;
-    }
+
+        // AlTERAÇÕES = []
+        //Para cada origem em {1, ..., n}:
+        //Para cada destino em {1, ..., n}:
+        //Se a aresta (origem, destino) não existe em G:
+        //Se adicionar (origem, destino) não cria um ciclo nem viola a restrição do número máximo de pais:
+        //ALTERAÇÕES += [adicionar a aresta (origem, destino)]
+        //Se a aresta (origem, destino) existe em G:
+        //Se inverter (origem, destino) não cria um ciclo nem viola a restrição do número máximo de pais:
+        //ALTERAÇÕES += [inverter a aresta (origem, destino), apagar a aresta (origem, destino)]
+        //Caso contrário:
+        //ALTERAÇÕES += [apagar a aresta (origem, destino)]
+        ArrayList<Integer> possibleChanges = new ArrayList<>();
+        for (int o=1, o < graph.length, int o; o++) {
+            for (int d=1, d < graph.length, int d; d++)) {
+                if graph.edgeQ(o,d) == False: {
+                    if addEdge(o,d) { //falta colocar a condição de não cria um ciclo nem viola a restrição do número máximo de pais:
+                        possibleChanges +=[addEdge(o,d)];
+                    }
+                else {
+                    if invertEdge(o,d) {//falta colocar a condição
+                        possibleChanges +=[invertEdge(o,d)];
+                        }
+                    else {
+                        possibleChanges += [removeEdge(o,d)];
+                        }
+                    }
+                }
+            }
+
+        }
+
+
 }
