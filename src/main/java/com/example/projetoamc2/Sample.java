@@ -72,7 +72,7 @@ public class Sample implements Serializable {
         this.len+=1;
     }
 
-    public int no_features() {
+    public int noColumns() {
         return lista.get(0).length;
     }
 

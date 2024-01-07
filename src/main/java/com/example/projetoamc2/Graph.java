@@ -1,31 +1,34 @@
 package com.example.projetoamc2;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Graph implements Serializable {
 
     private final int dim;
     public int k = 2;
+
+    private Sample sample;
     private final HashMap<Integer, LinkedList<Integer>> adj_lists = new HashMap<>();
     private final HashMap<Integer, Double> partial_MDLs = new HashMap<>();
 
 
-    Graph(int d) {
+    Graph(int d, Sample s) {
         this.dim = d; // nota: dim deve ser igual ao número de variáveis menos a classe.
         for (int i = 0; i<this.dim; i++) {
             adj_lists.put(i, new LinkedList<>());
 
         }
+        MDL(s,true);
     }
 
-    public Graph(int d, String random) {
+    public Graph(int d, Sample s, String random) {
 
         this.dim = d; // Nota: dim deve ser igual ao número de variáveis menos a classe, porque não representamos a classe no grafo (redundante).
         for (int i = 0; i<this.dim; i++) {
             adj_lists.put(i, new LinkedList<>());
         }
+        MDL(s,true);
 
         // List of nodes
         LinkedList<Integer> nodes = new LinkedList<>();
@@ -266,7 +269,15 @@ public class Graph implements Serializable {
     }
 
     public boolean operationAllowed(int o, int d, int operation) {
-        return (operation <=2 && operation >= 0) && !((this.createsCycle(o,d,operation)) || this.exceedsK(o,d,operation));
+        if (o==d) return false;
+        if (!(operation <= 2 && operation >= 0)) return false;
+        if (this.edgeQ(o,d)) {
+            if (operation == 0) return true;
+            if (operation == 2) return false;
+            return !((this.createsCycle(o, d, operation)) || this.exceedsK(o, d, operation));
+        } else {
+            return (operation == 1 && !((this.createsCycle(o, d, operation)) || this.exceedsK(o, d, operation)));
+        }
     }
 
     /**
@@ -342,7 +353,7 @@ public class Graph implements Serializable {
     }
 
     public Graph copy() {
-        Graph g = new Graph(this.dim);
+        Graph g = new Graph(this.dim, this.sample);
         for (int i = 0; i < g.dim; i++) {
             for (int j = 0; j < g.dim; j++) {
                 if (this.edgeQ(i,j)) {
@@ -360,10 +371,10 @@ public class Graph implements Serializable {
      * @return MDL score for the graph given the sample s.
      */
     // nota: estamos a usar a 2ª fórmula
-    public double MDL(Sample s, boolean recalculate) {
+    public Double MDL(Sample s, boolean recalculate) {
         //começamos pelo termo independente de i
        double res = -(BayesUtils.log2(s.length())/2)*(s.getDomain(this.getDim())-1);
-       for (int i = 0; i < s.no_features(); i++) {
+       for (int i = 0; i < s.noColumns(); i++) {
            double node_res = node_MDL(s, i, recalculate);
            res += node_res;
        }
@@ -380,9 +391,9 @@ public class Graph implements Serializable {
      *                  2 - Add Edge;
      * @return MDL variation
      */
-    public double MDLdelta(Sample s, int o, int d, int operation) {
+    public Double MDLdelta(Sample s, int o, int d, int operation) {
 
-        if (this.operationAllowed(o,d,operation)) {
+
             Graph temp = this.copy();
 
             if (operation == 1) {
@@ -396,10 +407,6 @@ public class Graph implements Serializable {
             }
 
             return temp.node_MDL(s, d, true) - this.partial_MDLs.get(d);
-        } else {
-            System.out.println("Operation not allowed.");
-            return -1;
-        }
     }
 
     /**
@@ -409,12 +416,12 @@ public class Graph implements Serializable {
      * @param recalculate If we desire to recalculate the property. Else, the function behaves as a getter.
      * @return Partial MDL score for a given node, storing it in the instance variable.
      */
-    public double node_MDL(Sample s, int node, boolean recalculate) {
+    public Double node_MDL(Sample s, int node, boolean recalculate) {
         // Pais do nó
         LinkedList<Integer> parents = this.parents(node);
         if (recalculate) {
             // Primeiro, o termo do log e do produtório.
-            double res_prod = (-BayesUtils.log2(s.length()) / 2) *
+            Double res_prod = (-BayesUtils.log2(s.length()) / 2) *
                     (s.getDomain(this.getDim())) * // |Dc|
                     (s.getDomain(node) - 1); // |Di - 1|
             for (int j : parents) {
@@ -436,7 +443,7 @@ public class Graph implements Serializable {
             // subList(1,2) -> c
 
 
-            double res_it = 0;
+            Double res_it = 0.0;
             for (int c = 0; c < s.getDomain(this.getDim()); c++) {
 
                 int T_c = s.count(List.of(this.getDim()), List.of(c));
@@ -500,7 +507,7 @@ public class Graph implements Serializable {
 
     public static void main(String[] args) {
         Sample s = new Sample("data/raw/bcancer.csv");
-        Graph g = new Graph(s.no_features()-1, "random");
+        Graph g = new Graph(s.noColumns()-1,s,"random");
         System.out.println(g);
     }
 
