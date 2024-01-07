@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 public class App1_GUI {
 
     private JFrame frame;
-    private Sample s;
+    public Sample s;
 
     private BayesianNetwork bn;
 
@@ -126,6 +126,7 @@ public class App1_GUI {
             File f = fc.getSelectedFile();
             String path = f.getAbsolutePath();
             s = new Sample(path);
+            System.out.println(s);
             dataset_lbl.setText("Dataset: Loaded");
             dataset_disp.setText(s.toString());
             learn_sample.setEnabled(true);
@@ -146,8 +147,9 @@ public class App1_GUI {
                     System.out.println("Error: The input provided is not valid.");
                 }
             }
-
+            System.out.println("Starting learning process");
             Graph bestgraph = Controller.greedy(s, n0graphs);
+            System.out.println("Learning process done.");
             //Display graph
 
             Double S = 0.5;
@@ -167,7 +169,7 @@ public class App1_GUI {
             save_bayes.setEnabled(true);
 
             // Experiment: GraphPanel - maybe remove?
-            Graph_Experiment graphpanel = new Graph_Experiment(bn.DAG);
+            Graph_Experiment graphpanel = new Graph_Experiment(bestgraph);
             c.gridx = 1;
             c.gridy = 5;
             c.gridwidth = 4;

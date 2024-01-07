@@ -14,11 +14,14 @@ public class Controller {
             graphs.add(new Graph(dim, s, "Random!"));
         }
 
+        System.out.println("Graphs initiated!");
         System.out.println(graphs);
 
         // Aprender cada grafo
         for (int i = 0; i<n0graphs; i++) {
             learn_graph(graphs.get(i), s);
+            System.out.println("Graph "+Integer.toString(i)+" learned!");
+            System.out.println("MDL is "+Double.toString(graphs.get(i).MDL(s, false)));
         }
 
         // Grafo com melhor MDL
@@ -29,6 +32,7 @@ public class Controller {
                 bestInd = i;
             }
         }
+        System.out.println(graphs.get(bestInd));
 
         // from list: return graph with max mdl
         return graphs.get(bestInd);
@@ -72,6 +76,7 @@ public class Controller {
 
         if (bestMDLDelta > 0) {
             // transformas o grafo no grafo vizinho melhor (não esquecer de atualizar os mdls (parciais e talvez o total)) (se inv chamar graph.node_mdl(o, ...) e graph.node_mdl(d, ...) se add ou rem chamar graph.node_mdl(d))
+            System.out.println("We found a best neighbor! Still going.");
             graph.applyOperation(bestAlteration[0], bestAlteration[1], bestAlteration[2]);
             if (bestAlteration[2]==1) {
                 graph.node_MDL(s, bestAlteration[0], true);

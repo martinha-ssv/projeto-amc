@@ -10,25 +10,30 @@ public class Graph implements Serializable {
 
     private Sample sample;
     private final HashMap<Integer, LinkedList<Integer>> adj_lists = new HashMap<>();
+    private final HashMap<Integer, LinkedList<Integer>> parents_lists= new HashMap<>();
     private final HashMap<Integer, Double> partial_MDLs = new HashMap<>();
 
 
     Graph(int d, Sample s) {
+        System.out.println("Building empty graph");
         this.dim = d; // nota: dim deve ser igual ao número de variáveis menos a classe.
+        this.sample = s;
         for (int i = 0; i<this.dim; i++) {
-            adj_lists.put(i, new LinkedList<>());
-
+            parents_lists.put(i, new LinkedList<Integer>());
+            System.out.println(this.parents(i));
         }
         MDL(s,true);
     }
 
     public Graph(int d, Sample s, String random) {
-
+        System.out.println("Building random graph");
+        this.sample = s;
         this.dim = d; // Nota: dim deve ser igual ao número de variáveis menos a classe, porque não representamos a classe no grafo (redundante).
         for (int i = 0; i<this.dim; i++) {
-            adj_lists.put(i, new LinkedList<>());
+            parents_lists.put(i, new LinkedList<Integer>());
+            System.out.println(this.parents(i));
         }
-        MDL(s,true);
+
 
         // List of nodes
         LinkedList<Integer> nodes = new LinkedList<>();
@@ -54,9 +59,8 @@ public class Graph implements Serializable {
                 this.addEdge(rand.nextInt(i), i);
             }
         }
+        MDL(s,true);
     }
-
-
 
     /**
      *
@@ -74,7 +78,7 @@ public class Graph implements Serializable {
      */
     public void addEdge(int o, int d) {
         if (!this.edgeQ(o,d)) {
-            adj_lists.get(o).add(d);
+            parents_lists.get(d).add(o);
         } else {
             System.out.println("Edge already existed.");
         }
@@ -90,7 +94,7 @@ public class Graph implements Serializable {
             // Integer está entre parênteses porque, normalmente, se o método remove receber um inteiro, acha
             // que é o índice do elemento que queremos remover. Temos de especificar que estamos a passar o
             // objeto que queremos que seja removido.
-            adj_lists.get(o).remove((Integer) d);
+            parents_lists.get(d).remove(o);
         } else {
             System.out.println("Edge ("+o+","+d+") can't be removed because it doesn't exist.");
         }
@@ -118,8 +122,8 @@ public class Graph implements Serializable {
      * @return <b>true</b> se existir uma aresta de <i>o</i> para <i>d</i>, <b>false</b> caso contrário
      */
     public boolean edgeQ(int o, int d) {
-        if (this.adj_lists.containsKey(o)) {
-            return adj_lists.get(o).contains(d);
+        if (this.parents_lists.containsKey(d)) {
+            return parents_lists.get(d).contains(o);
         } else {
             return false;
         }
@@ -136,19 +140,27 @@ public class Graph implements Serializable {
         return !(DFStraversal(o,d) == null);
     }
 
+    // DEBUG ONLY
+
+    private boolean hasCycle() {
+        boolean hasCycle = false;
+        for (int o = 0; o<this.dim; o++) {
+            for (int d = 0; d<this.dim; d++) {
+                if (o!=d) {
+                    if (this.connected(o,d) && this.connected(d,o)) return true;
+                }
+            }
+        }
+        return false;
+    }
     /**
      *
      * @param child Node for which you want the list of parents
      * @return List of parents of node <i>child</i>.
      */
     public LinkedList<Integer> parents(int child) {
-        LinkedList<Integer> res = new LinkedList<>();
-        for (int parent = 0; parent < this.dim; parent++) {
-            if (edgeQ(parent, child)) {
-                res.add(parent);
-            }
-        }
-        return res;
+        if (parents_lists.containsKey(child)) return parents_lists.get(child);
+        else return new LinkedList<>();
     }
 
     @Override
@@ -248,25 +260,8 @@ public class Graph implements Serializable {
         // return visited, else return null. Só chega ao caso em que devolve null SE não encontrar o target na BFStraversal a
         // partir do start node.
     }
-//podemos apagar porque este é o connected
-    private boolean haspathDFS(int o, int d, Set<Integer> visited) {
-        if (o == d) {
-            return true;
-        }
 
-        visited.add(o);
-        if (adj_lists.containsKey(o)) {
-            for (int neighbor : adj_lists.get(o)) {
-                if (!visited.contains(neighbor)) {
-                    if (haspathDFS(neighbor, d, visited)) {
-                        return true;
-                    }
-                }
-            }
-        }
 
-        return false;
-    }
 
     public boolean operationAllowed(int o, int d, int operation) {
         if (o==d) return false;
@@ -287,7 +282,7 @@ public class Graph implements Serializable {
      */
 
     private boolean addcreatesCycle(int o, int d) {
-        return !(DFStraversal(d,o)==null);
+        return (DFStraversal(d,o)!=null);
     }
 
     /**
@@ -296,22 +291,15 @@ public class Graph implements Serializable {
      * @param d
      */
     private boolean invertcreatesCycle(int o, int d) {
-        if (!adj_lists.containsKey(o)) {
-            System.out.println("Erro: o nó não tem vizinhos, não há arestas");
-        }
-        // Remove o nó de o para d mudar para removeedge
-        if (adj_lists.containsKey(o)) {
-            adj_lists.get(o).remove((Integer) d);
-        }
+        this.removeEdge(o,d);
         // Check if adding the edge in the reverse direction creates a cycle
         boolean createsCycle = addcreatesCycle(d, o);
-        // Add the edge back to its original direction, usar addedge
-        adj_lists.get(o).add(d);
+        this.addEdge(o,d);
 
         return createsCycle;
     }
     /**
-     *
+
      * @param o
      * @param d
      * @param operation Can take the value 1 - Edge inversion - and 2 - Edge addition.
@@ -372,6 +360,7 @@ public class Graph implements Serializable {
      */
     // nota: estamos a usar a 2ª fórmula
     public Double MDL(Sample s, boolean recalculate) {
+        System.out.println("Getting MDL");
         //começamos pelo termo independente de i
        double res = -(BayesUtils.log2(s.length())/2)*(s.getDomain(this.getDim())-1);
        for (int i = 0; i < s.noColumns(); i++) {
@@ -392,8 +381,7 @@ public class Graph implements Serializable {
      * @return MDL variation
      */
     public Double MDLdelta(Sample s, int o, int d, int operation) {
-
-
+            System.out.println("Getting MDLdelta");
             Graph temp = this.copy();
 
             if (operation == 1) {
@@ -417,6 +405,7 @@ public class Graph implements Serializable {
      * @return Partial MDL score for a given node, storing it in the instance variable.
      */
     public Double node_MDL(Sample s, int node, boolean recalculate) {
+        System.out.println("Getting node MDL");
         // Pais do nó
         LinkedList<Integer> parents = this.parents(node);
         if (recalculate) {
@@ -424,7 +413,7 @@ public class Graph implements Serializable {
             Double res_prod = (-BayesUtils.log2(s.length()) / 2) *
                     (s.getDomain(this.getDim())) * // |Dc|
                     (s.getDomain(node) - 1); // |Di - 1|
-            for (int j : parents) {
+            for (int j = 0; j<parents.size(); j++) {
                 res_prod *= s.getDomain(j);
             }
 
@@ -452,7 +441,7 @@ public class Graph implements Serializable {
 
                     int T_di_c = s.count(List.of(node, this.getDim()), List.of(di, c));
 
-                    for (LinkedList<Integer> parent_set : this.possibleParentValues(s, parents)) {
+                    for (LinkedList<Integer> parent_set : this.possibleParentValues(s, new LinkedList<>(parents))) {
 
                         LinkedList<Integer> values = new LinkedList<>(List.of(di));                    // Vector with
                         values.addAll(new LinkedList<Integer>(List.of(c)));
@@ -483,6 +472,7 @@ public class Graph implements Serializable {
      * @return LinkedList de LinkedLists de
      */
     public LinkedList<LinkedList<Integer>> possibleParentValues(Sample s, LinkedList<Integer> parents) {
+        //System.out.println("Getting possible Parents");
         LinkedList<LinkedList<Integer>> options = new LinkedList<>();
         // Caso de terminação: se só sobrar uma variável para combinar, devolvemos lista com os valores possíveis da variável.
         if (parents.size() == 1) {
@@ -493,7 +483,7 @@ public class Graph implements Serializable {
         // que ela toma, concatenamo-lo com cada vetor de combinações das restantes variáveis.
         } else if (parents.size() > 1) {
             int first_parent = parents.removeFirst(); // Tiramos a 1ª variável do vetor de pais
-            LinkedList<LinkedList<Integer>> combs = this.possibleParentValues(s, parents); // Chamamos a função para os pais restantes
+            LinkedList<LinkedList<Integer>> combs = this.possibleParentValues(s, new LinkedList<>(parents)); // Chamamos a função para os pais restantes
             for (int i = 0; i<s.getDomain(first_parent);i++) {
                 for (LinkedList<Integer> comb : combs) {
                     LinkedList<Integer> temp = new LinkedList<>(List.of(i));
@@ -507,8 +497,30 @@ public class Graph implements Serializable {
 
     public static void main(String[] args) {
         Sample s = new Sample("data/raw/bcancer.csv");
-        Graph g = new Graph(s.noColumns()-1,s,"random");
-        System.out.println(g);
+        //Graph g = new Graph(s.noColumns()-1,s,"random");
+
+
+
+            Graph g = new Graph (4,s);
+            System.out.println(g);
+            //g.addEdge(0,3);
+            g.addEdge(3,1);
+            g.addEdge(0,1);
+            System.out.println(g.DFStraversal(0,1)!=null);
+            System.out.println(g.addcreatesCycle(1,0));
+            System.out.println(g);
+            /*g.addEdge(0,5);
+            g.addEdge(2,1);
+            g.addEdge(2,3);
+            g.addEdge(3,2);
+            g.addEdge(2,4);
+            g.addEdge(4,4);
+            g.addEdge(4,3);
+            g.addEdge(4,5);
+            g.addEdge(5,4);
+            System.out.println(g.offspring(4));*/
+
+
     }
 
 }
