@@ -8,57 +8,51 @@ import java.util.List;
 public class DFONode implements Serializable {
     public int nodei;
     public LinkedList<Integer> parents_ind;
-    public HashMap<List<Integer>, Integer> tthetas = new HashMap<>();
+    public HashMap<List<Integer>, Double> tthetas = new HashMap<>();
+
+    @Override
+    public String toString() {
+        return "DFONode{" +
+                "tthetas=" + tthetas.toString() +
+                '}';
+    }
 
     public DFONode(Graph g, Sample sample, Double S, int node) {
-        /*nodei = node;
+        nodei = node;
         parents_ind = g.parents(node);
+        int Di = sample.getDomain(node);
         LinkedList<LinkedList<Integer>> parents_vals = g.possibleParentValues(sample, parents_ind);
         for (LinkedList<Integer> parent_val : parents_vals) {
-            double res_it = 0;
-            for (int c = 0; c < s.getDomain(this.getDim()); c++) {
+            LinkedList<Integer> key;
+            for (int c = 0; c < sample.getDomain(g.getDim()); c++) {
 
 
-                for (int di = 0; di < s.getDomain(node); di++) {
+                for (int di = 0; di < Di; di++) {
+                    key = new LinkedList<>(List.of(di));                    // Vector with
+                    key.add(c);
+                    key.addAll(parent_val); // variable values
+                    // este vetor está ordenado (di, c, valores(pais))
 
+                    int T_di_wi_c = sample.count(parent_val.subList(0, parent_val.size()), key.subList(0, key.size()));
+                    int T_wi_c = sample.count(parent_val.subList(1, parent_val.size()), key.subList(1, key.size()));
 
-                    for (LinkedList<Integer> parent_set : this.possibleParentValues(s, parents)) {
+                    tthetas.put(key, (double) ((T_di_wi_c + S) / ( T_wi_c + S * Di)));
 
-                        LinkedList<Integer> values = new LinkedList<>(List.of(di));                    // Vector with
-                        values.addAll(new LinkedList<Integer>(List.of(c)));
-                        values.addAll(parent_set); // variable values
-                        // este vetor está ordenado (di, c, valores(pais))
-
-                        int T_di_wi_c = s.count(vars.subList(0, vars.size()), values.subList(0, values.size()));
-                        int T_wi_c = s.count(vars.subList(1, vars.size()), values.subList(1, values.size()));
-
-                        res_it += T_di_wi_c *
-                                BayesUtils.log2((double) (T_di_wi_c * T_c) / (T_di_c * T_wi_c));
-
-                    }
                 }
             }
         }
+
     }
-
-    public double calculateTheta (int nodei){
-        LinkedList<Integer> parents = getPossibleParents(nodei);
-        LinkedList<LinkedList<Integer>> possibleParents = possibleParentValues(Sample, parents);
-                for (LinkedList<Integer> combinacao : combinacoesParentais) {
-                    countdiwi = subList(1,pais.size)
-                    countwi = subList(0, pais.size)
-                }
-            }
-
-            // Outros métodos...
+    public static void main(String[] args) {
+        Sample sample = new Sample("data/raw/bcancer.csv");
+        Graph g = new Graph(sample.noColumns()-1, sample, "");
+        System.out.println(g);
+        for (int i =0; i< sample.noColumns()-1; i++) {
+            DFONode node= new DFONode(g, sample, 0.5, i);
+            System.out.println(node.toString());
         }
 
 
 
-
-
-
-*/
     }
-
 }
