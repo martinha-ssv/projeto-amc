@@ -2,11 +2,11 @@ package com.example.projetoamc2;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.Arrays;
 
 public class Graph implements Serializable {
 
     private final int dim;
+    public int k = 2;
     private final HashMap<Integer, LinkedList<Integer>> adj_lists = new HashMap<>();
     private final HashMap<Integer, Double> partial_MDLs = new HashMap<>();
 
@@ -17,12 +17,40 @@ public class Graph implements Serializable {
 
         }
     }
-/*
-    public Graph(String random) {
-        //gera um grafo random
 
+    public Graph(int d, String random) {
+
+        this.dim = d; // Nota: dim deve ser igual ao número de variáveis menos a classe, porque não representamos a classe no grafo (redundante).
+        for (int i = 0; i<this.dim; i++) {
+            adj_lists.put(i, new LinkedList<>());
+        }
+
+        // List of nodes
+        LinkedList<Integer> nodes = new LinkedList<>();
+        for (int i = 0; i<d; i++) nodes.add(i);
+
+        // Random topological ordering of nodes -> Fischer-Yates
+        int temp;
+        int j;
+        Random rand = new Random();
+        for (int i = d-1; i>0; i--) {
+            // swap i for the element at j in {0, ..., i-1}
+            j = rand.nextInt(i);
+            temp = nodes.get(i);
+            nodes.set(i, nodes.get(j));
+            nodes.set(j, temp);
+        }
+
+        System.out.println(nodes);
+        // Random assignment of incoming degree (0, 1 or 2)
+        // For each node (in int order), for each j from 0 to incoming degree, get random int (0->order) to determine the source of that edge.
+        for (int i = d-1; i>0; i--) {
+            for (int in_degree = rand.nextInt(k+1); in_degree > 0; in_degree--) {
+                this.addEdge(rand.nextInt(i), i);
+            }
+        }
     }
-    */
+
 
 
     /**
@@ -108,7 +136,6 @@ public class Graph implements Serializable {
      * @return List of parents of node <i>child</i>.
      */
     public LinkedList<Integer> parents(int child) {
-        System.out.println("Calculating parents");
         LinkedList<Integer> res = new LinkedList<>();
         for (int parent = 0; parent < this.dim; parent++) {
             if (edgeQ(parent, child)) {
@@ -123,11 +150,10 @@ public class Graph implements Serializable {
         String res = "Graph: \n dim=" + dim + ",\n";
         res += "edges = {\n";
         for (int o = 0; o < dim; o++) {
-            res += "From "+o+":\n";
-            for (int d = 0; d < dim; d++) {
-                if (edgeQ(o, d)) {
-                    res += o + " -> " + d + "\n";
-                }
+            res += "Parents of "+o+":\n";
+            LinkedList<Integer> parents = this.parents(o);
+            for (int d = 0; d < parents.size(); d++) {
+                res += parents.get(d) + " -> " + o + "\n";
             }
         }
         return res;
@@ -461,17 +487,9 @@ public class Graph implements Serializable {
     }
 
     public static void main(String[] args) {
-        Sample s = new Sample("/Users/gabrielagomes/IdeaProjects/projeto-amc/data/raw/bcancer.csv");
-        Graph g = new Graph(s.no_features()-1);
+        Sample s = new Sample("data/raw/bcancer.csv");
+        Graph g = new Graph(s.no_features()-1, "random");
         System.out.println(g);
-        g.addEdge(0, 2);
-        g.addEdge(1, 0);
-        g.addEdge(2, 3);
-        g.addEdge(1,3);
-        System.out.println(g.addcreatesCycle(2,3));
-        System.out.println(g.invertcreatesCycle(1,3));
-
-
     }
 
 }
