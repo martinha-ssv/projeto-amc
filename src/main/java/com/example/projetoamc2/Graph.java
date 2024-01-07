@@ -5,13 +5,12 @@ import java.util.*;
 
 public class Graph implements Serializable {
 
-    private final int dim;
+    private  int dim;
     public int k = 2;
 
     private Sample sample;
-    private final HashMap<Integer, LinkedList<Integer>> adj_lists = new HashMap<>();
-    private final HashMap<Integer, LinkedList<Integer>> parents_lists= new HashMap<>();
-    private final HashMap<Integer, Double> partial_MDLs = new HashMap<>();
+    private HashMap<Integer, LinkedList<Integer>> parents_lists = new HashMap<>();
+    private HashMap<Integer, Double> partial_MDLs = new HashMap<>();
 
 
     Graph(int d, Sample s) {
@@ -33,7 +32,6 @@ public class Graph implements Serializable {
             parents_lists.put(i, new LinkedList<Integer>());
             System.out.println(this.parents(i));
         }
-
 
         // List of nodes
         LinkedList<Integer> nodes = new LinkedList<>();
@@ -60,6 +58,11 @@ public class Graph implements Serializable {
             }
         }
         MDL(s,true);
+    }
+
+    public void addNode() {
+        parents_lists.put(this.getDim(), new LinkedList<>());
+        this.dim += 1;
     }
 
     /**

@@ -13,11 +13,14 @@ public class BayesianNetwork implements Serializable {
     public int noClasses;
 
     public Integer[] domains;
+
     public BayesianNetwork(Graph g, Sample sample, double S) {
         this.DAG = g;
+        this.DAG.addNode();
+        for (int i = 0; i<this.DAG.getDim()-1; i++) this.DAG.addEdge(this.DAG.getDim()-1, i);
         this.dfos = new DFONode[this.DAG.getDim()];
         for (int i = 0; i < this.DAG.getDim(); i++) {
-            dfos[i] = new DFONode(g, sample, S, i, this);
+            dfos[i] = new DFONode(sample, S, i, this);
         }
         this.domains = sample.getDomains();
         this.noClasses = domains[domains.length-1]+1;

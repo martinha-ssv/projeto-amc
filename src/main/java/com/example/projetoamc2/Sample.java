@@ -141,6 +141,8 @@ public class Sample implements Serializable {
 
     public int getDomain(int i) {  return this.domain[i];  }
 
+    public int getLen() {return lista.size(); }
+
 
     @Override
     public String toString() {
