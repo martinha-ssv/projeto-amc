@@ -54,11 +54,11 @@ public class Controller {
         for (int o=1; o < graph.length; int o; o++) {
             for (int d=1; d < graph.length; int d; d++)) {
                 if graph.edgeQ(o,d) == False: {
-                    if (!graph.addcreatesCycle(d, o) && graph.operationAllowed()) {
+                    if (graph.operationAllowed()) {
                         possibleChanges+=[2 (o,d)];
                     }
                 else {
-                    if (!graph.invertcreatesCycle(d, o) && graph.operationAllowed()) {
+                    if (graph.operationAllowed()) {
                         possibleChanges +=[1(o,d)];
                         }
                     else {

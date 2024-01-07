@@ -331,7 +331,7 @@ public class Graph implements Serializable {
         }
     }
 
-    public static void applyOperation(int o, int d, int operation){
+    public void applyOperation(int o, int d, int operation){
         if (operation == 0){
             this.removeEdge(o, d);
         } else if (operation == 1) {

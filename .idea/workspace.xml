@@ -54,7 +54,7 @@
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "Application.BayesianNetwork.executor": "Debug",
-    "Application.Graph.executor": "Debug",
+    "Application.Graph.executor": "Run",
     "Application.HelloApplication.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -99,8 +99,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.BayesianNetwork" />
         <item itemvalue="Application.Graph" />
+        <item itemvalue="Application.BayesianNetwork" />
       </list>
     </recent_temporary>
   </component>
