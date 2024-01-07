@@ -70,7 +70,7 @@ public class App2_GUI {
 
         // Action Listeners -----------------------------------------------
         load_bayes.addActionListener(actionEvent -> {
-            /*JFileChooser fc = new JFileChooser();
+            JFileChooser fc = new JFileChooser();
             fc.showOpenDialog(load_bayes);
             File f = fc.getSelectedFile();
             String path = f.getAbsolutePath();
@@ -80,7 +80,7 @@ public class App2_GUI {
                 throw new RuntimeException(e);
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
-            }*/
+            }
             display_input_dialog();
 
         });

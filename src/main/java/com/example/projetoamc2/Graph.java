@@ -14,7 +14,9 @@ public class Graph implements Serializable {
 
 
     Graph(int d, Sample s) {
+        System.out.println("Building empty graph");
         this.dim = d; // nota: dim deve ser igual ao número de variáveis menos a classe.
+        this.sample = s;
         for (int i = 0; i<this.dim; i++) {
             adj_lists.put(i, new LinkedList<>());
 
@@ -23,12 +25,13 @@ public class Graph implements Serializable {
     }
 
     public Graph(int d, Sample s, String random) {
-
+        System.out.println("Building random graph");
+        this.sample = s;
         this.dim = d; // Nota: dim deve ser igual ao número de variáveis menos a classe, porque não representamos a classe no grafo (redundante).
         for (int i = 0; i<this.dim; i++) {
             adj_lists.put(i, new LinkedList<>());
         }
-        MDL(s,true);
+
 
         // List of nodes
         LinkedList<Integer> nodes = new LinkedList<>();
@@ -54,9 +57,8 @@ public class Graph implements Serializable {
                 this.addEdge(rand.nextInt(i), i);
             }
         }
+        MDL(s,true);
     }
-
-
 
     /**
      *
@@ -136,6 +138,19 @@ public class Graph implements Serializable {
         return !(DFStraversal(o,d) == null);
     }
 
+    // DEBUG ONLY
+
+    private boolean hasCycle() {
+        boolean hasCycle = false;
+        for (int o = 0; o<this.dim; o++) {
+            for (int d = 0; d<this.dim; d++) {
+                if (o!=d) {
+                    if (this.connected(o,d) && this.connected(d,o)) return true;
+                }
+            }
+        }
+        return false;
+    }
     /**
      *
      * @param child Node for which you want the list of parents
@@ -372,6 +387,7 @@ public class Graph implements Serializable {
      */
     // nota: estamos a usar a 2ª fórmula
     public Double MDL(Sample s, boolean recalculate) {
+        System.out.println("Getting MDL");
         //começamos pelo termo independente de i
        double res = -(BayesUtils.log2(s.length())/2)*(s.getDomain(this.getDim())-1);
        for (int i = 0; i < s.noColumns(); i++) {
@@ -392,8 +408,7 @@ public class Graph implements Serializable {
      * @return MDL variation
      */
     public Double MDLdelta(Sample s, int o, int d, int operation) {
-
-
+            System.out.println("Getting MDLdelta");
             Graph temp = this.copy();
 
             if (operation == 1) {
@@ -417,6 +432,7 @@ public class Graph implements Serializable {
      * @return Partial MDL score for a given node, storing it in the instance variable.
      */
     public Double node_MDL(Sample s, int node, boolean recalculate) {
+        System.out.println("Getting node MDL");
         // Pais do nó
         LinkedList<Integer> parents = this.parents(node);
         if (recalculate) {
@@ -452,7 +468,7 @@ public class Graph implements Serializable {
 
                     int T_di_c = s.count(List.of(node, this.getDim()), List.of(di, c));
 
-                    for (LinkedList<Integer> parent_set : this.possibleParentValues(s, parents)) {
+                    for (LinkedList<Integer> parent_set : this.possibleParentValues(s, new LinkedList<>(parents))) {
 
                         LinkedList<Integer> values = new LinkedList<>(List.of(di));                    // Vector with
                         values.addAll(new LinkedList<Integer>(List.of(c)));
@@ -483,6 +499,7 @@ public class Graph implements Serializable {
      * @return LinkedList de LinkedLists de
      */
     public LinkedList<LinkedList<Integer>> possibleParentValues(Sample s, LinkedList<Integer> parents) {
+        //System.out.println("Getting possible Parents");
         LinkedList<LinkedList<Integer>> options = new LinkedList<>();
         // Caso de terminação: se só sobrar uma variável para combinar, devolvemos lista com os valores possíveis da variável.
         if (parents.size() == 1) {
@@ -493,7 +510,7 @@ public class Graph implements Serializable {
         // que ela toma, concatenamo-lo com cada vetor de combinações das restantes variáveis.
         } else if (parents.size() > 1) {
             int first_parent = parents.removeFirst(); // Tiramos a 1ª variável do vetor de pais
-            LinkedList<LinkedList<Integer>> combs = this.possibleParentValues(s, parents); // Chamamos a função para os pais restantes
+            LinkedList<LinkedList<Integer>> combs = this.possibleParentValues(s, new LinkedList<>(parents)); // Chamamos a função para os pais restantes
             for (int i = 0; i<s.getDomain(first_parent);i++) {
                 for (LinkedList<Integer> comb : combs) {
                     LinkedList<Integer> temp = new LinkedList<>(List.of(i));

@@ -57,7 +57,7 @@ public class Sample implements Serializable {
         }
     }
 
-    public void add (Integer[] v){
+    public void add(Integer[] v){
         //Para atualizar os domínios - confirmar se está bem
         if (domain == null) {
             // Se os domínios ainda não foram inicializados, inicialize-os com os valores do primeiro vetor
@@ -74,6 +74,16 @@ public class Sample implements Serializable {
 
     public int noColumns() {
         return lista.get(0).length;
+    }
+
+    public String head(int n) {
+        StringBuilder s= new StringBuilder("\n[\n");
+        if (!lista.isEmpty()) s.append(Arrays.toString(lista.get(0)));
+        for (int i=1; i<n;i++)
+            s.append("\n").append(Arrays.toString(lista.get(i)));
+        s.append("\n]");
+
+        return "Sample " + s;
     }
 
     public int length (){
@@ -113,6 +123,9 @@ public class Sample implements Serializable {
         return r;
     }
 
+    public Integer[] getDomains() {
+        return domain;
+    }
 
     public int domain(int[] var){
         if (domain==null) {
