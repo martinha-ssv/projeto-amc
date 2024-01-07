@@ -3,6 +3,7 @@ package com.example.projetoamc2;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -37,7 +38,7 @@ public class Controller {
         // transformas o grafo no grafo vizinho melhor (não esquecer de atualizar os mdls (parciais e talvez o total)) (se inv chamar graph.node_mdl(o, ...) e graph.node_mdl(d, ...) se add ou rem chamar graph.node_mdl(d))
         // devolves o mdldelta deste grafo
 
-        // AlTERAÇÕES = []
+        // AlTERAÇÕES = [] --- código professor
         //Para cada origem em {1, ..., n}:
         //Para cada destino em {1, ..., n}:
         //Se a aresta (origem, destino) não existe em G:
@@ -49,24 +50,44 @@ public class Controller {
         //Caso contrário:
         //ALTERAÇÕES += [apagar a aresta (origem, destino)]
         ArrayList<Integer> possibleChanges = new ArrayList<>();
-        for (int o=1, o < graph.length, int o; o++) {
-            for (int d=1, d < graph.length, int d; d++)) {
+        //erro porque falta dizer que possibleChanges contém entradas de int o, int d e int operation?
+        for (int o=1; o < graph.length; int o; o++) {
+            for (int d=1; d < graph.length; int d; d++)) {
                 if graph.edgeQ(o,d) == False: {
-                    if addEdge(o,d) { //falta colocar a condição de não cria um ciclo nem viola a restrição do número máximo de pais:
-                        possibleChanges +=[addEdge(o,d)];
+                    if (!graph.addcreatesCycle(d, o) && graph.operationAllowed()) {
+                        possibleChanges+=[2 (o,d)];
                     }
                 else {
-                    if invertEdge(o,d) {//falta colocar a condição
-                        possibleChanges +=[invertEdge(o,d)];
+                    if (!graph.invertcreatesCycle(d, o) && graph.operationAllowed()) {
+                        possibleChanges +=[1(o,d)];
                         }
                     else {
-                        possibleChanges += [removeEdge(o,d)];
+                        possibleChanges += [0(o,d)];
                         }
                     }
                 }
             }
 
         }
+        for (int i=0; i <possibleChanges.length; int i; i++){
+            double bestMDLDelta = Double.NEGATIVE_INFINITY;
+            Graph bestGraph = graph;
+            double mdlDelta = MDLdelta(i,o,d,operation);
+            Array bestChange =
+            Graph modifiedGraph = applyOperation(int o, int d, int operation); //dúvida: como é que escolho o o, d e operation da melhor entrada da possibleChanges
+
+            if (mdlDelta > bestMDLDelta) {
+                bestMDLDelta = mdlDelta;
+
+                bestGraph = modifiedGraph;
+
+
+            }
+
+        }
+    return bestMDLDelta;
+    }
+
 
 
 }

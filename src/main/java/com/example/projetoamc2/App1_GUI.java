@@ -148,8 +148,22 @@ public class App1_GUI {
             }
 
             Graph bestgraph = Controller.greedy(s, n0graphs);
+            //Display graph
 
+            Double S = 0.5;
+            boolean isDouble = false;
 
+            while (!isDouble) {
+                String input = JOptionPane.showInputDialog(learn_sample, "Please input the pseudocount S value.");
+                try {
+                    S = Double.valueOf(input.replace(',', '.'));
+                    isDouble = S > 0;
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: The input provided is not valid.");
+                }
+            }
+
+            bn = new BayesianNetwork(bestgraph, s, S);
             save_bayes.setEnabled(true);
 
             // Experiment: GraphPanel - maybe remove?

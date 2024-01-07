@@ -1,6 +1,7 @@
 package com.example.projetoamc2;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.Arrays;
 
@@ -18,11 +19,13 @@ public class Graph implements Serializable {
 
         }
     }
-
+/*
     public Graph(String random) {
         //gera um grafo random
 
     }
+    */
+
 
     /**
      *
@@ -31,8 +34,7 @@ public class Graph implements Serializable {
     public int getDim() {
         return dim;
     }
-    public boolean edgeQ(int o, int d) {
-        return adj_lists[o].contains(d);
+
 
     /**
      * Adiciona uma aresta de <i>o</i> para <i>d</i>.
@@ -98,10 +100,10 @@ public class Graph implements Serializable {
      * @param d destino
      * @return <i>true</i> se existir um caminho de <i>o</i> para <i>d</i>, <i>false</i> caso contrário.
      */
-
+//este pode ser o haspath
     public boolean connected(int o, int d) {
-        return !(BFStraversal(o, d) == null);
-    } //não sei se é melhor usar o BFS ou o DFS, mas acho que é indiferente maybe
+        return !(DFStraversal(o,d) == null);
+    }
 
     /**
      *
@@ -154,11 +156,37 @@ public class Graph implements Serializable {
      * @param startNode
      * @return the list of nodes reachable from the <i>startNode</i>.
      */
+    //provavelmente podemos apagar
     public LinkedList<Integer> BFS(int startNode) {
         return BFStraversal(startNode, -1);
     }
+    public LinkedList<Integer> DFS(int origin) {
+        return DFStraversal(origin, -1);
+    }
 
+    private LinkedList<Integer> DFStraversal(Integer origin, Integer target) {
+        LinkedList<Integer> res = new LinkedList<>();
+        LinkedList<Integer> visited = new LinkedList<>();
+        Queue<Integer> to_visit = new LinkedList<>();
+        to_visit.add(origin);
+        visited.add(origin);
 
+        while (!to_visit.isEmpty()) {
+            int node = to_visit.poll();
+            if (node == target) {
+                return visited; // Return immediately if target is found
+            }
+            res.add(node);
+            for(int child : offspring(node)) {
+                if(!visited.contains(child)) {
+                    to_visit.add(child);
+                    visited.add(child);
+                }
+            }
+        }
+        return target < 0 ? res : null;
+    }
+//provavelmente podemos apagar
     private LinkedList<Integer> BFStraversal(Integer startNode, Integer target) {
         /*
          * to_visit é a fila (queue) com os nós a serem
@@ -191,7 +219,7 @@ public class Graph implements Serializable {
         // return visited, else return null. Só chega ao caso em que devolve null SE não encontrar o target na BFStraversal a
         // partir do start node.
     }
-
+//podemos apagar porque este é o connected
     private boolean haspathDFS(int o, int d, Set<Integer> visited) {
         if (o == d) {
             return true;
@@ -201,7 +229,7 @@ public class Graph implements Serializable {
         if (adj_lists.containsKey(o)) {
             for (int neighbor : adj_lists.get(o)) {
                 if (!visited.contains(neighbor)) {
-                    if (haspathDFS(neighbor, o, visited)) {
+                    if (haspathDFS(neighbor, d, visited)) {
                         return true;
                     }
                 }
@@ -212,7 +240,7 @@ public class Graph implements Serializable {
     }
 
     public boolean operationAllowed(int o, int d, int operation) {
-        return !((this.createsCycle(o,d,operation)) || this.exceedsK(o,d,operation));
+        return (operation <=2 && operation >= 0) && !((this.createsCycle(o,d,operation)) || this.exceedsK(o,d,operation));
     }
 
     /**
@@ -222,8 +250,7 @@ public class Graph implements Serializable {
      */
 
     private boolean addcreatesCycle(int o, int d) {
-        Set<Integer> visited = new HashSet<>();
-        return haspathDFS(o, d, visited);
+        return !(DFStraversal(d,o)==null);
     }
 
     /**
@@ -235,13 +262,13 @@ public class Graph implements Serializable {
         if (!adj_lists.containsKey(o)) {
             System.out.println("Erro: o nó não tem vizinhos, não há arestas");
         }
-        // Remove o nó de o para d
+        // Remove o nó de o para d mudar para removeedge
         if (adj_lists.containsKey(o)) {
             adj_lists.get(o).remove((Integer) d);
         }
         // Check if adding the edge in the reverse direction creates a cycle
         boolean createsCycle = addcreatesCycle(d, o);
-        // Add the edge back to its original direction
+        // Add the edge back to its original direction, usar addedge
         adj_lists.get(o).add(d);
 
         return createsCycle;
@@ -264,12 +291,13 @@ public class Graph implements Serializable {
         return false;
     }
 
+
     private boolean exceedsK(int o, int d, int operation) {
         if (operation==2) {
             return (parents(d).size()>1);
         }
-        else if (operation==1 || operation==0) {
-            return (parents(d).size()-1>2);
+        else if (operation==1) {
+            return (parents(o).size()>1);
         }
         else {
             System.out.println("Operation not allowed");
@@ -277,31 +305,14 @@ public class Graph implements Serializable {
         }
     }
 
-    public LinkedList<Integer> DFS(int o) {
-        /*
-         * to_visit é a pilha (stack) com os nós a serem
-         * visitados. visited é a lista dos nós que em algum
-         * ponto já foram adicionados à stack.
-         * Quando um nó é visitado, ele é adicionado ao res
-         * e os seus filhos que não estão no visited são
-         * adicionados à stack.
-         */
-        LinkedList<Integer> res = new LinkedList<>();
-        Stack<Integer> to_visit = new Stack<>();
-        LinkedList<Integer> visited = new LinkedList<>();
-        to_visit.push(o);
-        visited.add(o);
-        while (!to_visit.empty()) {
-            int node = to_visit.pop();
-            res.add(node);
-            for (int child : offspring(node)) {
-                if (!visited.contains(child)) {
-                    to_visit.push(child);
-                    visited.add(child);
-                }
-            }
+    public static void applyOperation(int o, int d, int operation){
+        if (operation == 0){
+            this.removeEdge(o, d);
+        } else if (operation == 1) {
+            this.invertEdge(o, d);
+        } else if (operation == 2) {
+            this.addEdge(o,d);
         }
-        return res;
     }
 
     public Graph copy() {
@@ -451,9 +462,9 @@ public class Graph implements Serializable {
             int first_parent = parents.removeFirst(); // Tiramos a 1ª variável do vetor de pais
             LinkedList<LinkedList<Integer>> combs = this.possibleParentValues(s, parents); // Chamamos a função para os pais restantes
             for (int i = 0; i<s.getDomain(first_parent);i++) {
-                for (int j = 0; j<combs.size(); j++) {
+                for (LinkedList<Integer> comb : combs) {
                     LinkedList<Integer> temp = new LinkedList<>(List.of(i));
-                    temp.addAll(combs.get(j));
+                    temp.addAll(comb);
                     options.add(temp);
                 }
             }
@@ -462,18 +473,17 @@ public class Graph implements Serializable {
     }
 
     public static void main(String[] args) {
-        Sample s = new Sample("/Users/martavasconcelos/Documents/Universidade/2º Ano/1º Semestre/Algoritmos e Modelação Computacional/Projeto/projeto-amc2/data/raw/bcancer.csv");
+        Sample s = new Sample("/Users/gabrielagomes/IdeaProjects/projeto-amc/data/raw/bcancer.csv");
         Graph g = new Graph(s.no_features()-1);
         System.out.println(g);
-        for (int i = 0; i < s.no_features(); i++) {
-            System.out.println(s.getDomain(i));
-        }
-        g.addEdge(0, 1);
-        g.addEdge(2, 1);
-        g.addEdge(3, 1);
-        LinkedList<Integer> parents = g.parents(1);
-        LinkedList<LinkedList<Integer>> posspars = g.possibleParentValues(s, parents);
-        System.out.println(posspars);
+        g.addEdge(0, 2);
+        g.addEdge(1, 0);
+        g.addEdge(2, 3);
+        g.addEdge(1,3);
+        System.out.println(g.addcreatesCycle(2,3));
+        System.out.println(g.invertcreatesCycle(1,3));
+
+
     }
 
 }
