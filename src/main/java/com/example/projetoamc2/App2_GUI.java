@@ -70,7 +70,7 @@ public class App2_GUI {
 
         // Action Listeners -----------------------------------------------
         load_bayes.addActionListener(actionEvent -> {
-            JFileChooser fc = new JFileChooser();
+            /*JFileChooser fc = new JFileChooser();
             fc.showOpenDialog(load_bayes);
             File f = fc.getSelectedFile();
             String path = f.getAbsolutePath();
@@ -80,7 +80,7 @@ public class App2_GUI {
                 throw new RuntimeException(e);
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
-            }
+            }*/
             display_input_dialog();
 
         });
@@ -119,7 +119,6 @@ public class App2_GUI {
 
         // Predict button (sidebar)
         JButton predict_sidebar = new JButton("Predict");
-        predict_sidebar.setEnabled(false);
 
         c.gridy = 2;
 
@@ -145,10 +144,25 @@ public class App2_GUI {
         JLabel[] labels = new JLabel[bn.getNumNodes()];
 
         // for loop: Variable labels and Variable text fields
+        for (int i = 0; i<bn.getNumNodes(); i++) {
+                // Input Labels
+                c.gridx = i+1;
+                c.gridy = 0;
+                labels[i] = new JLabel("X"+Integer.toString(i));
+                labels[i].setFont(new Font("Andale Mono", Font.PLAIN, 15));
 
-        // Predict button: vector panel
+                input_pnl.add(labels[i],c);
 
-        // Output text area
+                // Input Fields
+                c.gridy = 1;
+
+                input_fields[i] = new JTextField();
+
+                input_pnl.add(input_fields[i], c);
+
+
+        }
+
     }
 
 
