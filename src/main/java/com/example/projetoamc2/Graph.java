@@ -2,27 +2,60 @@ package com.example.projetoamc2;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.Arrays;
 
 public class Graph implements Serializable {
 
     private final int dim;
+    public int k = 2;
+
+    private Sample sample;
     private final HashMap<Integer, LinkedList<Integer>> adj_lists = new HashMap<>();
     private final HashMap<Integer, Double> partial_MDLs = new HashMap<>();
 
-    Graph(int d) {
+
+    Graph(int d, Sample s) {
         this.dim = d; // nota: dim deve ser igual ao número de variáveis menos a classe.
         for (int i = 0; i<this.dim; i++) {
             adj_lists.put(i, new LinkedList<>());
 
         }
+        MDL(s,true);
     }
-/*
-    public Graph(String random) {
-        //gera um grafo random
 
+    public Graph(int d, Sample s, String random) {
+
+        this.dim = d; // Nota: dim deve ser igual ao número de variáveis menos a classe, porque não representamos a classe no grafo (redundante).
+        for (int i = 0; i<this.dim; i++) {
+            adj_lists.put(i, new LinkedList<>());
+        }
+        MDL(s,true);
+
+        // List of nodes
+        LinkedList<Integer> nodes = new LinkedList<>();
+        for (int i = 0; i<d; i++) nodes.add(i);
+
+        // Random topological ordering of nodes -> Fischer-Yates
+        int temp;
+        int j;
+        Random rand = new Random();
+        for (int i = d-1; i>0; i--) {
+            // swap i for the element at j in {0, ..., i-1}
+            j = rand.nextInt(i);
+            temp = nodes.get(i);
+            nodes.set(i, nodes.get(j));
+            nodes.set(j, temp);
+        }
+
+        System.out.println(nodes);
+        // Random assignment of incoming degree (0, 1 or 2)
+        // For each node (in int order), for each j from 0 to incoming degree, get random int (0->order) to determine the source of that edge.
+        for (int i = d-1; i>0; i--) {
+            for (int in_degree = rand.nextInt(k+1); in_degree > 0; in_degree--) {
+                this.addEdge(rand.nextInt(i), i);
+            }
+        }
     }
-    */
+
 
 
     /**
@@ -32,6 +65,7 @@ public class Graph implements Serializable {
     public int getDim() {
         return dim;
     }
+
 
     /**
      * Adiciona uma aresta de <i>o</i> para <i>d</i>.
@@ -108,7 +142,6 @@ public class Graph implements Serializable {
      * @return List of parents of node <i>child</i>.
      */
     public LinkedList<Integer> parents(int child) {
-        System.out.println("Calculating parents");
         LinkedList<Integer> res = new LinkedList<>();
         for (int parent = 0; parent < this.dim; parent++) {
             if (edgeQ(parent, child)) {
@@ -123,11 +156,10 @@ public class Graph implements Serializable {
         String res = "Graph: \n dim=" + dim + ",\n";
         res += "edges = {\n";
         for (int o = 0; o < dim; o++) {
-            res += "From "+o+":\n";
-            for (int d = 0; d < dim; d++) {
-                if (edgeQ(o, d)) {
-                    res += o + " -> " + d + "\n";
-                }
+            res += "Parents of "+o+":\n";
+            LinkedList<Integer> parents = this.parents(o);
+            for (int d = 0; d < parents.size(); d++) {
+                res += parents.get(d) + " -> " + o + "\n";
             }
         }
         return res;
@@ -237,7 +269,15 @@ public class Graph implements Serializable {
     }
 
     public boolean operationAllowed(int o, int d, int operation) {
-        return (operation <=2 && operation >= 0) && !((this.createsCycle(o,d,operation)) || this.exceedsK(o,d,operation));
+        if (o==d) return false;
+        if (!(operation <= 2 && operation >= 0)) return false;
+        if (this.edgeQ(o,d)) {
+            if (operation == 0) return true;
+            if (operation == 2) return false;
+            return !((this.createsCycle(o, d, operation)) || this.exceedsK(o, d, operation));
+        } else {
+            return (operation == 1 && !((this.createsCycle(o, d, operation)) || this.exceedsK(o, d, operation)));
+        }
     }
 
     /**
@@ -302,9 +342,18 @@ public class Graph implements Serializable {
         }
     }
 
+    public void applyOperation(int o, int d, int operation){
+        if (operation == 0){
+            this.removeEdge(o, d);
+        } else if (operation == 1) {
+            this.invertEdge(o, d);
+        } else if (operation == 2) {
+            this.addEdge(o,d);
+        }
+    }
 
     public Graph copy() {
-        Graph g = new Graph(this.dim);
+        Graph g = new Graph(this.dim, this.sample);
         for (int i = 0; i < g.dim; i++) {
             for (int j = 0; j < g.dim; j++) {
                 if (this.edgeQ(i,j)) {
@@ -322,10 +371,10 @@ public class Graph implements Serializable {
      * @return MDL score for the graph given the sample s.
      */
     // nota: estamos a usar a 2ª fórmula
-    public double MDL(Sample s, boolean recalculate) {
+    public Double MDL(Sample s, boolean recalculate) {
         //começamos pelo termo independente de i
        double res = -(BayesUtils.log2(s.length())/2)*(s.getDomain(this.getDim())-1);
-       for (int i = 0; i < s.no_features(); i++) {
+       for (int i = 0; i < s.noColumns(); i++) {
            double node_res = node_MDL(s, i, recalculate);
            res += node_res;
        }
@@ -342,9 +391,9 @@ public class Graph implements Serializable {
      *                  2 - Add Edge;
      * @return MDL variation
      */
-    public double MDLdelta(Sample s, int o, int d, int operation) {
+    public Double MDLdelta(Sample s, int o, int d, int operation) {
 
-        if (this.operationAllowed(o,d,operation)) {
+
             Graph temp = this.copy();
 
             if (operation == 1) {
@@ -358,10 +407,6 @@ public class Graph implements Serializable {
             }
 
             return temp.node_MDL(s, d, true) - this.partial_MDLs.get(d);
-        } else {
-            System.out.println("Operation not allowed.");
-            return -1;
-        }
     }
 
     /**
@@ -371,12 +416,12 @@ public class Graph implements Serializable {
      * @param recalculate If we desire to recalculate the property. Else, the function behaves as a getter.
      * @return Partial MDL score for a given node, storing it in the instance variable.
      */
-    public double node_MDL(Sample s, int node, boolean recalculate) {
+    public Double node_MDL(Sample s, int node, boolean recalculate) {
         // Pais do nó
         LinkedList<Integer> parents = this.parents(node);
         if (recalculate) {
             // Primeiro, o termo do log e do produtório.
-            double res_prod = (-BayesUtils.log2(s.length()) / 2) *
+            Double res_prod = (-BayesUtils.log2(s.length()) / 2) *
                     (s.getDomain(this.getDim())) * // |Dc|
                     (s.getDomain(node) - 1); // |Di - 1|
             for (int j : parents) {
@@ -398,7 +443,7 @@ public class Graph implements Serializable {
             // subList(1,2) -> c
 
 
-            double res_it = 0;
+            Double res_it = 0.0;
             for (int c = 0; c < s.getDomain(this.getDim()); c++) {
 
                 int T_c = s.count(List.of(this.getDim()), List.of(c));
@@ -461,17 +506,9 @@ public class Graph implements Serializable {
     }
 
     public static void main(String[] args) {
-        Sample s = new Sample("/Users/gabrielagomes/IdeaProjects/projeto-amc/data/raw/bcancer.csv");
-        Graph g = new Graph(s.no_features()-1);
+        Sample s = new Sample("data/raw/bcancer.csv");
+        Graph g = new Graph(s.noColumns()-1,s,"random");
         System.out.println(g);
-        g.addEdge(0, 2);
-        g.addEdge(1, 0);
-        g.addEdge(2, 3);
-        g.addEdge(1,3);
-        System.out.println(g.addcreatesCycle(2,3));
-        System.out.println(g.invertcreatesCycle(1,3));
-
-
     }
 
 }
