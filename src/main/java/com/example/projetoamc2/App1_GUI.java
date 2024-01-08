@@ -169,7 +169,7 @@ public class App1_GUI {
             save_bayes.setEnabled(true);
 
             // Experiment: GraphPanel - maybe remove?
-            Graph_Experiment graphpanel = new Graph_Experiment(bestgraph);
+            /*Graph_Experiment graphpanel = new Graph_Experiment(bestgraph);
             c.gridx = 1;
             c.gridy = 5;
             c.gridwidth = 4;
@@ -177,7 +177,7 @@ public class App1_GUI {
             c.weightx = 4;
             c.weighty = 3;
 
-            frame.getContentPane().add(graphpanel, c);
+            frame.getContentPane().add(graphpanel, c);*/
 
         });
 

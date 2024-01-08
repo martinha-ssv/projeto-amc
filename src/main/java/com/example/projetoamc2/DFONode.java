@@ -22,11 +22,13 @@ public class DFONode implements Serializable {
         return res;
     }
 
-    public DFONode(Graph g, Sample sample, Double S, int node, BayesianNetwork bn) {
+    public DFONode(Sample sample, Double S, int node, BayesianNetwork bn) {
         nodei = node;
+        Cache cache = new Cache(sample);
         bayes = bn;
+        Graph g = bn.DAG;
         parents_ind = g.parents(nodei);
-        int Di = sample.getDomain(node);
+        int Di = bn.domains[nodei];
 
         if (!parents_ind.isEmpty()) {
 
@@ -34,30 +36,36 @@ public class DFONode implements Serializable {
 
             LinkedList<Integer> key_vars = new LinkedList<>(List.of(node, sample.noColumns() - 1));
             key_vars.addAll(parents_ind);
+            System.out.println(this.parents_ind);
 
+            // Por cada combinação de valores que os pais tomam, valor que o nó toma e valor que a classe toma:
             for (LinkedList<Integer> parent_val : parents_vals) {
-
-                for (int c = 0; c < sample.getDomain(g.getDim()); c++) {
-
+                for (int c = 0; c < bayes.noClasses; c++) {
                     for (int di = 0; di < Di; di++) {
+
                         LinkedList<Integer> key = new LinkedList<>(List.of(di, c));                    // Vector with
                         key.addAll(parent_val); // variable values
                         // este vetor está ordenado (di, c, valores(pais))
-                        int T_di_wi_c = sample.count(key_vars.subList(0, key_vars.size()), key.subList(0, key.size()));
-                        int T_wi_c = sample.count(key_vars.subList(1, key_vars.size()), key.subList(1, key.size()));
+
+
+                        int T_di_wi_c = cache.updated_count(key_vars.subList(0, key_vars.size()), key.subList(0, key.size()));
+                        int T_wi_c = cache.updated_count(key_vars.subList(1, key_vars.size()), key.subList(1, key.size()));
 
                         tthetas.put(key, (double) ((T_di_wi_c + S) / (T_wi_c + S * Di)));
 
                     }
                 }
             }
-        } else { // No time para ficar bonito, vai martelado (acontece :( )
+
+        }  else {
             LinkedList<Integer> key_vars = new LinkedList<>(List.of(node, sample.noColumns() - 1));
-            for (int c = 0; c < sample.getDomain(g.getDim()); c++) {
+
+            // Por cada combinação de valor que a variável pode tomar e a classe
+            for (int c = 0; c < bayes.noClasses; c++) {
                 for (int di = 0; di < Di; di++) {
                     LinkedList<Integer> key = new LinkedList<>(List.of(di, c));
 
-                    int T_di_wi_c = sample.count(key_vars.subList(0, key_vars.size()), key.subList(0, key.size()));
+                    int T_di_wi_c = cache.updated_count(key_vars.subList(0, key_vars.size()), key.subList(0, key.size()));
                     int T_wi_c = sample.count(key_vars.subList(1, key_vars.size()), key.subList(1, key.size()));
 
                     tthetas.put(key, (double) ((T_di_wi_c + S) / (T_wi_c + S * Di)));
@@ -98,14 +106,13 @@ public class DFONode implements Serializable {
         System.out.println(g);
         BayesianNetwork bn = new BayesianNetwork(g, sample, 0.5);
 
-        for (int i = 0; i < g.getDim(); i++) {
+        for (int i = 0; i < bn.DAG.getDim(); i++) {
             System.out.println(Integer.toString(i)+" ; parents="+g.parents(i).toString());
         }
-        for (int i =0; i< sample.noColumns()-1; i++) {
-            DFONode node= new DFONode(g, sample, 0.5, i, bn);
+        for (int i =0; i< bn.DAG.getDim(); i++) {
+            DFONode node= new DFONode(sample, 0.5, i, bn);
             System.out.println(node);
         }
-
 
     }
 }
