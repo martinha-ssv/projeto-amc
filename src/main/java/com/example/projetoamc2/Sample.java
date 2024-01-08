@@ -17,10 +17,6 @@ public class Sample implements Serializable {
     private Integer[] domain = null;    // Array de domínios, deve ser actualizado no método add.
 
 
-    public Sample() {
-        this.lista = new HashMap<>();
-    }
-
     static Integer[] convert (String line) {
         String csvSplitBy = ",";
         String[] strings     = line.split(csvSplitBy);
@@ -105,22 +101,26 @@ public class Sample implements Serializable {
         // Obter o vetor de Sample atual
         for (int i = 0; i < len; i++) {
             Integer[] sample = lista.get(i);
-            boolean match = true;
-            // Verificar se os valores em 'sample' correspondem aos valores em 'val' nas posições 'var'
-            for (int j = 0; j < var.size(); j++) {
-                // Verifica se a posição dada por var[j] é válida
-                if (var.get(j) >= sample.length || !Objects.equals(sample[var.get(j)], val.get(j))) {
-                    match = false;
-                    break; // Não é uma correspondência, não precisa verificar mais
-                }
-            }
-            if (match) {
+            if (isaMatch(var, val, sample)) {
                 r++;
             }
             // Todos os valores correspondem, incrementa o contador
 
         }
         return r;
+    }
+
+    public boolean isaMatch(List<Integer> var, List<Integer> val, Integer[] sample) {
+        boolean match = true;
+        // Verificar se os valores em 'sample' correspondem aos valores em 'val' nas posições 'var'
+        for (int j = 0; j < var.size(); j++) {
+            // Verifica se a posição dada por var[j] é válida
+            if (var.get(j) >= sample.length || !Objects.equals(sample[var.get(j)], val.get(j))) {
+                match = false;
+                break; // Não é uma correspondência, não precisa verificar mais
+            }
+        }
+        return match;
     }
 
     public Integer[] getDomains() {
@@ -143,6 +143,8 @@ public class Sample implements Serializable {
 
     public int getLen() {return lista.size(); }
 
+    public int getClassValue(int index) { return this.element(index)[this.noColumns()-1];}
+    public int getFeatureValue(int index, int feature) { return this.element(index)[feature];}
 
     @Override
     public String toString() {
@@ -153,6 +155,13 @@ public class Sample implements Serializable {
         s.append("\n]");
 
         return "Sample " + s;
+    }
+
+    public static void main(String[] args) {
+        Sample sample = new Sample("data/raw/bcancer.csv");
+        Cache c = new Cache(sample);
+        System.out.println(sample.count(new LinkedList<>(List.of(6,10,2,3)), new LinkedList<>(List.of(1,0,0,2))));
+        System.out.println(c.updated_count(new LinkedList<>(List.of(6,10,2,3)), new LinkedList<>(List.of(1,0,0,2))));
     }
 
 

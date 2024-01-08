@@ -9,10 +9,13 @@ public class Graph extends GraphStructure implements Serializable {
 
     private final HashMap<Integer, Double> partial_MDLs = new HashMap<>();
 
+    private Cache cache;
+
 
     Graph(int d, Sample s) {
         super(d);
         this.sample = s;
+        this.cache = new Cache(sample);
         for (int i = 0; i<this.dim; i++) {
             parents_lists.put(i, new LinkedList<Integer>());
             System.out.println(this.parents(i));
@@ -24,6 +27,7 @@ public class Graph extends GraphStructure implements Serializable {
         super(d);
         System.out.println("Building random graph");
         this.sample = s;
+        this.cache = new Cache(sample);
         this.dim = d; // Nota: dim deve ser igual ao número de variáveis menos a classe, porque não representamos a classe no grafo (redundante).
         for (int i = 0; i<this.dim; i++) {
             parents_lists.put(i, new LinkedList<Integer>());
@@ -161,13 +165,14 @@ public class Graph extends GraphStructure implements Serializable {
 
 
             Double res_it = 0.0;
-            for (int c = 0; c < s.getDomain(this.getDim()); c++) {
-
+            Integer[] domains = sample.getDomains();
+            for (int c = 0; c < domains[domains.length-1]; c++) {
+                System.out.println(domains[domains.length-1]);
                 int T_c = s.count(List.of(this.getDim()), List.of(c));
 
                 for (int di = 0; di < s.getDomain(node); di++) {
 
-                    int T_di_c = s.count(List.of(node, this.getDim()), List.of(di, c));
+                    int T_di_c = cache.updated_count(new LinkedList<>(List.of(node, this.getDim())), new LinkedList<>(List.of(di, c)));
 
                     for (LinkedList<Integer> parent_set : this.possibleParentValues(s, new LinkedList<>(parents))) {
 
@@ -176,8 +181,8 @@ public class Graph extends GraphStructure implements Serializable {
                         values.addAll(parent_set); // variable values
                         // este vetor está ordenado (di, c, valores(pais))
 
-                        int T_di_wi_c = s.count(vars.subList(0, vars.size()), values.subList(0, values.size()));
-                        int T_wi_c = s.count(vars.subList(1, vars.size()), values.subList(1, values.size()));
+                        int T_di_wi_c = cache.updated_count(vars.subList(0, vars.size()), values.subList(0, values.size()));
+                        int T_wi_c = cache.updated_count(vars.subList(1, vars.size()), values.subList(1, values.size()));
 
                         res_it += T_di_wi_c *
                                 BayesUtils.log2((double) (T_di_wi_c * T_c) / (T_di_c * T_wi_c));

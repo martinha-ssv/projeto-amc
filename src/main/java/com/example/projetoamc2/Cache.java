@@ -68,12 +68,19 @@ public class Cache implements Serializable {
         varsCopy.remove(1);
         valsCopy.remove(1);
 
+
+
         //System.out.println(bitsetstr(res));
         for (int i = 0;i < varsCopy.size(); i++) {
             //List<Integer> key = Arrays.asList(c, vars.get(i), vals.get(i));
-            //System.out.println("c="+c+",i="+vars.get(i)+",di="+vals.get(i));
-            BitSet b = map.get(c).get(varsCopy.get(i)).get(valsCopy.get(i));
-            res.and(b);
+            System.out.println("c="+c+",i="+vars.get(i)+",di="+vals.get(i));
+            if (map.containsKey(c) && map.get(c).containsKey(varsCopy.get(i)) && map.get(c).get(varsCopy.get(i)).containsKey(valsCopy.get(i))) {
+                BitSet b = map.get(c).get(varsCopy.get(i)).get(valsCopy.get(i));
+                res.and(b);
+            } else {
+                System.out.println("Key not found");
+                res.set(0,sSize, false);
+            }
         }
         //System.out.println("isto está a funcionar?");
         //ystem.out.println(bitsetstr(res));

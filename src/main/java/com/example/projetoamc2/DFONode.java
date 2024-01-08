@@ -24,6 +24,7 @@ public class DFONode implements Serializable {
 
     public DFONode(Sample sample, Double S, int node, BayesianNetwork bn) {
         nodei = node;
+        Cache cache = new Cache(sample);
         bayes = bn;
         Graph g = bn.DAG;
         parents_ind = g.parents(nodei);
@@ -35,6 +36,7 @@ public class DFONode implements Serializable {
 
             LinkedList<Integer> key_vars = new LinkedList<>(List.of(node, sample.noColumns() - 1));
             key_vars.addAll(parents_ind);
+            System.out.println(this.parents_ind);
 
             // Por cada combinação de valores que os pais tomam, valor que o nó toma e valor que a classe toma:
             for (LinkedList<Integer> parent_val : parents_vals) {
@@ -46,8 +48,8 @@ public class DFONode implements Serializable {
                         // este vetor está ordenado (di, c, valores(pais))
 
 
-                        int T_di_wi_c = sample.count(key_vars.subList(0, key_vars.size()), key.subList(0, key.size()));
-                        int T_wi_c = sample.count(key_vars.subList(1, key_vars.size()), key.subList(1, key.size()));
+                        int T_di_wi_c = cache.updated_count(key_vars.subList(0, key_vars.size()), key.subList(0, key.size()));
+                        int T_wi_c = cache.updated_count(key_vars.subList(1, key_vars.size()), key.subList(1, key.size()));
 
                         tthetas.put(key, (double) ((T_di_wi_c + S) / (T_wi_c + S * Di)));
 
@@ -63,7 +65,7 @@ public class DFONode implements Serializable {
                 for (int di = 0; di < Di; di++) {
                     LinkedList<Integer> key = new LinkedList<>(List.of(di, c));
 
-                    int T_di_wi_c = sample.count(key_vars.subList(0, key_vars.size()), key.subList(0, key.size()));
+                    int T_di_wi_c = cache.updated_count(key_vars.subList(0, key_vars.size()), key.subList(0, key.size()));
                     int T_wi_c = sample.count(key_vars.subList(1, key_vars.size()), key.subList(1, key.size()));
 
                     tthetas.put(key, (double) ((T_di_wi_c + S) / (T_wi_c + S * Di)));
