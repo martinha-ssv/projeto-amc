@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Graph extends GraphStructure implements Serializable {
-    private int dim;
-    public int k = 2;
-    private final HashMap<Integer, LinkedList<Integer>> parents_lists= new HashMap<>();
 
     private Sample sample;
 

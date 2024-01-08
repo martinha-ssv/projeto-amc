@@ -1,6 +1,7 @@
 package com.example.projetoamc2;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,23 +9,31 @@ import java.util.List;
 public class BayesianNetwork implements Serializable {
 
     public Graph DAG;
-    private int numNodes;
     public DFONode[] dfos;
     public int noClasses;
-
+    public Double[] probs_c;
     public Integer[] domains;
 
     public BayesianNetwork(Graph g, Sample sample, double S) {
         this.DAG = g;
-        this.DAG.addNode();
-        for (int i = 0; i<this.DAG.getDim()-1; i++) this.DAG.addEdge(this.DAG.getDim()-1, i);
         this.dfos = new DFONode[this.DAG.getDim()];
+        this.domains = sample.getDomains();
+        this.noClasses = domains[domains.length-1];
+        this.probs_c = this.calculate_class_probs(sample, S);
         for (int i = 0; i < this.DAG.getDim(); i++) {
             dfos[i] = new DFONode(sample, S, i, this);
         }
-        this.domains = sample.getDomains();
-        this.noClasses = domains[domains.length-1]+1;
 
+    }
+
+    private Double[] calculate_class_probs(Sample sample, Double S) {
+        Double[] res = new Double[this.noClasses];
+        int T = sample.getLen();
+        for (int c = 0; c<this.noClasses; c++) {
+            int T_c = sample.count(List.of(this.DAG.getDim()), List.of(c));
+            res[c] = ((double) ((T_c + S) / (T + S * this.noClasses)));
+        }
+        return res;
     }
 
     public void export_network(String path) {
@@ -43,7 +52,7 @@ public class BayesianNetwork implements Serializable {
     }
 
     public int getNumNodes() {
-        return numNodes;
+        return this.DAG.getDim();
     }
 
     public DFONode getDFO(int node) {
@@ -51,12 +60,11 @@ public class BayesianNetwork implements Serializable {
     }
 
     private Double[] classes_probs(List<Integer> vec) {
-        Double[] Ps = new Double[this.noClasses];
-        for (int c = 0; c<this.noClasses; c++) Ps[c] = 1.0;
+        Double[] Ps = Arrays.copyOf(probs_c, probs_c.length);
 
         for (int i = 0; i<this.DAG.getDim(); i++) {
             for (int c = 0; c<this.noClasses; c++) {
-                Ps[c]*= this.getDFO(i).getTheta(vec, c);
+                Ps[c] *= this.getDFO(i).getTheta(vec, c);
             }
         }
 
@@ -74,4 +82,15 @@ public class BayesianNetwork implements Serializable {
         return max_ind;
     }
 
+    public static void main(String[] args) {
+        Sample sample = new Sample("data/raw/bcancer.csv");
+        Graph g = new Graph(10, sample);
+        g.addEdge(3,2);
+        g.addEdge(5,2);
+        g.addEdge(5,3);
+        g.addEdge(6,4);
+        BayesianNetwork bn = new BayesianNetwork(g, sample, 0.5);
+
+
+    }
 }

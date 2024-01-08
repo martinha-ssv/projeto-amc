@@ -8,9 +8,10 @@ import java.util.Random;
 
 public class GraphStructure implements Serializable {
 
-    private int dim;
+    protected int dim;
     public int k = 2;
-    private final HashMap<Integer, LinkedList<Integer>> parents_lists= new HashMap<>();
+    protected final HashMap<Integer, LinkedList<Integer>> parents_lists= new HashMap<>();
+
     GraphStructure(int d) {
         System.out.println("Building empty graph");
         this.dim = d; // nota: dim deve ser igual ao número de variáveis menos a classe.
