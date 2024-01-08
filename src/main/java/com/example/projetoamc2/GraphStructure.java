@@ -52,7 +52,7 @@ public class GraphStructure implements Serializable {
             // Integer está entre parênteses porque, normalmente, se o método remove receber um inteiro, acha
             // que é o índice do elemento que queremos remover. Temos de especificar que estamos a passar o
             // objeto que queremos que seja removido.
-            parents_lists.get(d).remove(o);
+            parents_lists.get(d).remove((Integer) o);
         } else {
             System.out.println("Edge ("+o+","+d+") can't be removed because it doesn't exist.");
         }
