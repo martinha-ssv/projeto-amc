@@ -10,7 +10,7 @@ public class GraphStructure implements Serializable {
 
     protected int dim;
     public int k = 2;
-    protected final HashMap<Integer, LinkedList<Integer>> parents_lists= new HashMap<>();
+    protected final HashMap<Integer, LinkedList<Integer>> parents_lists= new HashMap<>(); //cada índice corresponde a um filho e a lista da entrada aos pais, é útil pq vamos precisar mais vezes de aceder aos pais
 
     GraphStructure(int d) {
         System.out.println("Building empty graph");

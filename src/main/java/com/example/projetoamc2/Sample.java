@@ -133,8 +133,8 @@ public class Sample implements Serializable {
         }
         int r=1;
         for (int pos : var) {
-            assert domain != null;
-            r *= domain[pos];
+            assert domain != null; //verifica que o domínio não é nulo
+            r *= domain[pos]; //produto de todos os elementos
         }
         return r;
     }

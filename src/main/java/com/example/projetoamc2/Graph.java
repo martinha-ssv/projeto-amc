@@ -153,7 +153,7 @@ public class Graph extends GraphStructure implements Serializable {
             // Não acabei.
 
 
-            LinkedList<Integer> vars = new LinkedList<>(List.of(node));                             //Vector with variable
+            LinkedList<Integer> vars = new LinkedList<>(List.of(node));     //(está fora do loop porque os índices das variáveis são fixos)                         //Vector with variable
             vars.addAll(new LinkedList<Integer>(List.of(this.getDim())));
             vars.addAll(parents); // indices (for count conditions)
             // este vetor está ordenado (i, indice(c), indices(pais))
@@ -166,15 +166,15 @@ public class Graph extends GraphStructure implements Serializable {
 
             Double res_it = 0.0;
             Integer[] domains = sample.getDomains();
-            for (int c = 0; c < domains[domains.length-1]; c++) {
+            for (int c = 0; c < domains[domains.length-1]; c++) { //a classe c varia menos, começámos por essa
                 System.out.println(domains[domains.length-1]);
                 int T_c = s.count(List.of(this.getDim()), List.of(c));
 
-                for (int di = 0; di < s.getDomain(node); di++) {
+                for (int di = 0; di < s.getDomain(node); di++) { //o valor de i varia menos que os pais
 
                     int T_di_c = cache.updated_count(new LinkedList<>(List.of(node, this.getDim())), new LinkedList<>(List.of(di, c)));
 
-                    for (LinkedList<Integer> parent_set : this.possibleParentValues(s, new LinkedList<>(parents))) {
+                    for (LinkedList<Integer> parent_set : this.possibleParentValues(s, new LinkedList<>(parents))) { //são os que variam mais
 
                         LinkedList<Integer> values = new LinkedList<>(List.of(di));                    // Vector with
                         values.addAll(new LinkedList<Integer>(List.of(c)));
